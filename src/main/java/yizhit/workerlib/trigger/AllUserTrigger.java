@@ -76,12 +76,12 @@ public class AllUserTrigger {
 
             String Idnum = (String) item.get("cwrIdnum");
             userModel.setUsername(Idnum);
-            String passWord = null;
-            if (Idnum.length() < 6) {
-                passWord = "123456";
-            } else {
-                passWord = Idnum.substring(Idnum.length() - 6);
-            }
+            String passWord = "";
+//            if (Idnum.length() < 6) {
+//                passWord = "123456";
+//            } else {
+//                passWord = Idnum.substring(Idnum.length() - 6);
+//            }
 
             if(item.get("createBy") == null) {
                 userModel.setCreateBy(Integer.valueOf(1));
