@@ -119,6 +119,7 @@ public class AllUserTrigger {
                 byte[] binary = QRCodeUtil.creatRrCode(url,width,height);
                 String path = UploadUtils.upload(qrCodePath + "/workerlib/people/code" ,filename,binary);
                 item.put("qr_code", path);
+                item.put("createBy", js.getId());
             }
         }
 

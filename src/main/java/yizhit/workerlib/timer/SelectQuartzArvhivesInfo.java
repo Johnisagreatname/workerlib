@@ -179,6 +179,14 @@ public class SelectQuartzArvhivesInfo {
                 archivesInfo.setCwrUserIn(info.getCwrUserIn());
                 archivesInfo.setCwrUserOut(info.getCwrUserOut());
                 ArchivesInfo js = archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").first();
+
+                UserModel account = new UserModel();
+                account.setUsername(info.getCwrIdnum());
+                account = account.where("username=#{username}").first();
+                if(account != null) {
+                    archivesInfo.setCreateBy(account.getId());
+                }
+
                 if (js == null ){
                     Integer i = info.insert();
                 }else if ("结束".equals(info.getCwrUserStatus())){
@@ -186,8 +194,8 @@ public class SelectQuartzArvhivesInfo {
                     archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").update("[cwrUserStatus]=#{cwrUserStatus},[eafId]=#{eafId},[unit_id]=#{cwrComid}," +
                             "[name]=#{eafName},[phone]=#{eafPhone},[cwrIdnumType]=#{cwrIdnumType}," +
                             "[id_number]=#{cwrIdnum},[CwrWorkClass]=#{CwrWorkClass},[work_type]=#{CwrWorkName}," +
-                            "[createOn]=#{eafCreatetime},[modifyBy]=#{eafModifier},[modifyOn]=#{eafModifytime}," +
-                            "[createBy]=#{eafCreator},[eafRLeftid]=#{eafRLeftid},[cwrWorkclassId]=#{cwrWorkclassId}," +
+                            "[createOn]=#{eafCreatetime},[modifyBy]=#{createBy},[modifyOn]=#{eafModifytime}," +
+                            "[createBy]=#{createBy},[eafRLeftid]=#{eafRLeftid},[cwrWorkclassId]=#{cwrWorkclassId}," +
                             "[cwrWorktype]=#{cwrWorktype},[cwrUserIn]=#{cwrUserIn},[cwrUserOut]=#{cwrUserOut}," +
                             "[leave]=#{leave}");
                 }else{
@@ -195,8 +203,8 @@ public class SelectQuartzArvhivesInfo {
                     archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").update("[cwrUserOut]=#{cwrUserOut},[eafId]=#{eafId},[unit_id]=#{cwrComid}," +
                             "[name]=#{eafName},[phone]=#{eafPhone},[cwrIdnumType]=#{cwrIdnumType}," +
                             "[id_number]=#{cwrIdnum},[CwrWorkClass]=#{CwrWorkClass},[work_type]=#{CwrWorkName}," +
-                            "[createOn]=#{eafCreatetime},[modifyBy]=#{eafModifier},[modifyOn]=#{eafModifytime}," +
-                            "[createBy]=#{eafCreator},[eafRLeftid]=#{eafRLeftid},[cwrWorkclassId]=#{cwrWorkclassId}," +
+                            "[createOn]=#{eafCreatetime},[modifyBy]=#{createBy},[modifyOn]=#{eafModifytime}," +
+                            "[createBy]=#{createBy},[eafRLeftid]=#{eafRLeftid},[cwrWorkclassId]=#{cwrWorkclassId}," +
                             "[cwrWorktype]=#{cwrWorktype},[cwrUserIn]=#{cwrUserIn}");
                 }
             }
