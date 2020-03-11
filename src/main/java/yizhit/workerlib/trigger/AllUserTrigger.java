@@ -76,12 +76,12 @@ public class AllUserTrigger {
 
             String Idnum = (String) item.get("cwrIdnum");
             userModel.setUsername(Idnum);
-            String passWord = null;
-            if (Idnum.length() < 6) {
-                passWord = "123456";
-            } else {
-                passWord = Idnum.substring(Idnum.length() - 6);
-            }
+//            String passWord = null;
+//            if (Idnum.length() < 6) {
+//                passWord = "123456";
+//            } else {
+//                passWord = Idnum.substring(Idnum.length() - 6);
+//            }
 
             if(item.get("createBy") == null) {
                 userModel.setCreateBy(Integer.valueOf(1));
@@ -95,7 +95,7 @@ public class AllUserTrigger {
             if(item.get("userPath") != null) {
                 userModel.setPath((String)item.get("userPath"));
             }
-            userModel.setPassword(passWord);
+            userModel.setPassword(null);
             Integer userid = userModel.getId()==null ? 0 : userModel.getId().intValue();
 
             if(userid < 1) {
