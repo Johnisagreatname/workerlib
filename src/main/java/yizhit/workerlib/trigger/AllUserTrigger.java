@@ -91,11 +91,11 @@ public class AllUserTrigger {
             }
 
             userModel.setCreateOn(new Date());
-            userModel.setPath("0/1");
+            userModel.setPath(item.get("userPath").toString());
             if(item.get("userPath") != null) {
                 userModel.setPath((String)item.get("userPath"));
             }
-            userModel.setPassword(null);
+            userModel.setPassword("");
             Integer userid = userModel.getId()==null ? 0 : userModel.getId().intValue();
 
             if(userid < 1) {

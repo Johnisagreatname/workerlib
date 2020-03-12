@@ -24,13 +24,15 @@ import java.util.regex.Pattern;
 public class SelectQuartzArvhivesInfo {
     private static final Logger log = LogManager.getLogger(SelectQuartzArvhivesInfo.class);
 
+    public static boolean isActived = false;
+
     @Value("${enableTasks:false}")
     private Boolean enableTasks;
 
 
     public void batchInsertArvhivesInfo(){
 
-        if(!enableTasks) {
+        if(enableTasks!=null && !enableTasks) {
             return;
         }
 
@@ -223,6 +225,10 @@ public class SelectQuartzArvhivesInfo {
             allUserInfoUpdate.setCwrIdnum(info.getCwrIdnum());
             allUserInfoUpdate.setUnitId(info.getCwrComid());
             allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").update("[unit_id]=#{unitId}");
+            allUserInfoUpdate = allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").first();
+            if(allUserInfoUpdate == null) {
+                return;
+            }
 
             if(StringUtils.isEmpty(info.getCwrWorkName())) {
                 return;
@@ -244,7 +250,7 @@ public class SelectQuartzArvhivesInfo {
 
             //给工种表导入工种信息
             WorkType workType = new WorkType();
-            workType.setEafId(info.getUserid());
+            workType.setEafId(allUserInfoUpdate.getEafId());
             workType.setWorkType(info.getCwrWorkName());
             workType.setCreateBy("1");
             workType.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -288,7 +294,7 @@ public class SelectQuartzArvhivesInfo {
      */
     public void updateArchivesPhoto(){
 
-        if(!enableTasks) {
+        if(enableTasks!=null && !enableTasks) {
             return;
         }
 

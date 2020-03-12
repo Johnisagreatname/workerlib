@@ -32,6 +32,7 @@ public final class PrjectTrigger {
             group.setGroupId(groupId);
             group.setGroupName((String)item.get("project_name"));
             group.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+            group.setUserPath(item.get("userPath").toString());
             group.insert();
 
             //查找管理员id
@@ -58,7 +59,7 @@ public final class PrjectTrigger {
             privilege.setCanList(1);
             privilege.setCanQuery(1);
             privilege.setScope(4);
-            privilege.setUserPath("0/1");
+            privilege.setUserPath(item.get("userPath").toString());
             privilege.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             privilege.insert();
         }
