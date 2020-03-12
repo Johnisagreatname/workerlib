@@ -25,6 +25,8 @@ public class AllUserInfo extends Queryable<AllUserInfo> implements Serializable 
 
     private String cwrIdnum;        //身份证号码
 
+    private int createBy;
+
     @Fieldname("id_card_front")
     private String cwrIdphotoScan;  //身份证扫描件
 
@@ -206,6 +208,14 @@ public class AllUserInfo extends Queryable<AllUserInfo> implements Serializable 
 
     public void setUserid(Integer userid) {
         this.userid = userid;
+    }
+
+    public int getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(int createBy) {
+        this.createBy = createBy;
     }
 
 

@@ -16,6 +16,8 @@ public class ArchivesInfo  extends Queryable<ArchivesInfo> {
     @Fieldname("eafId")
     private String eafId;
 
+    private Integer createBy;
+
     @Fieldname("archives_id")
     private String userid;          //用户ID
 
@@ -234,6 +236,14 @@ public class ArchivesInfo  extends Queryable<ArchivesInfo> {
 
     public void setCwrUserOut(String cwrUserOut) {
         this.cwrUserOut = cwrUserOut;
+    }
+
+    public Integer getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Integer createBy) {
+        this.createBy = createBy;
     }
 //    private String eafRRightclsid;
 //    private String cwrUserType;

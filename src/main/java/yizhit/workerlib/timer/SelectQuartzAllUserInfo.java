@@ -193,6 +193,7 @@ public class SelectQuartzAllUserInfo {
                             info.setQrCode(temp.getQrCode());
                         }
                         info.setUserid(currentUser.getId());
+                        info.setCreateBy(currentUser.getId());
                     }
 
                     //给UserGroupRole表插入所有人员信息
@@ -202,7 +203,7 @@ public class SelectQuartzAllUserInfo {
                     userGroupRoleModel.setRoleId(roleId.getRoleId());
                     userGroupRoleModel.setPath("0/1");
                     userGroupRoleModel.setCreateOn(new Date());
-                    userGroupRoleModel.setCreateBy(Integer.valueOf(1));
+                    userGroupRoleModel.setCreateBy(info.getCreateBy());
                     userGroupRoleModel.setUserId(info.getUserid());
                     if("工人".equals(roleId.getRoleName()) && !userGroupRoleModel.where("[userId]=#{userId}")
                             .and("[roleId]=#{roleId}").exist()) {
@@ -233,6 +234,7 @@ public class SelectQuartzAllUserInfo {
                     allUserInfoByUpdate.setCwrStatus(info.getCwrStatus());
                     allUserInfoByUpdate.setEafStatus(info.getEafStatus());
                     allUserInfoByUpdate.setQrCode(info.getQrCode());
+                    allUserInfoByUpdate.setCreateBy(info.getUserid());
                     if(StringUtils.isNotEmpty(info.getCwrIdnum())) {
                         allUserInfoByUpdate.setYear(Integer.parseInt(info.getCwrIdnum().substring(6, 10)));
                         allUserInfoByUpdate.setMonth(Integer.parseInt(info.getCwrIdnum().substring(10,12)));
@@ -256,7 +258,7 @@ public class SelectQuartzAllUserInfo {
                                 "[cwrIdnum]=#{cwrIdnum},[id_card_front]=#{cwrIdphotoScan},[cwrPhoto]=#{cwrPhoto}," +
                                 "[eafCreatetime]=#{eafCreatetime},[eafModifytime]=#{eafModifytime},[cwrIdaddr]=#{cwrIdaddr}," +
                                 "[eafCreator]=#{eafCreator},[eafModifier]=#{eafModifier},[cwrStatus]=#{cwrStatus}," +
-                                "[eafStatus]=#{eafStatus}");
+                                "[eafStatus]=#{eafStatus}, [createBy]=#{createBy}");
                     }
                 }catch (Exception ee){
                     if (js == null) {
