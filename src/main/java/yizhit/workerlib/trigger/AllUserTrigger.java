@@ -76,7 +76,7 @@ public class AllUserTrigger {
 
             String Idnum = (String) item.get("cwrIdnum");
             userModel.setUsername(Idnum);
-            String passWord = "";
+//            String passWord = null;
 //            if (Idnum.length() < 6) {
 //                passWord = "123456";
 //            } else {
@@ -95,7 +95,7 @@ public class AllUserTrigger {
             if(item.get("userPath") != null) {
                 userModel.setPath((String)item.get("userPath"));
             }
-            userModel.setPassword(passWord);
+            userModel.setPassword(null);
             Integer userid = userModel.getId()==null ? 0 : userModel.getId().intValue();
 
             if(userid < 1) {
@@ -119,7 +119,6 @@ public class AllUserTrigger {
                 byte[] binary = QRCodeUtil.creatRrCode(url,width,height);
                 String path = UploadUtils.upload(qrCodePath + "/workerlib/people/code" ,filename,binary);
                 item.put("qr_code", path);
-                item.put("createBy", js.getId());
             }
         }
 

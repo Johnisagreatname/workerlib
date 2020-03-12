@@ -2,6 +2,7 @@
 # 1.ccweb配置
 
 entity:
+  lang: cn
   datasource: workerlib #可通过url的{datasource}参数访问到该数据库，没有在此设置的environment不能通过url访问到
   queryable:
     configFile: db-config.xml #数据库配置路径
@@ -151,8 +152,8 @@ entity:
           mimeType: gif, jpg, png, jpeg #允许上传的文件格式
           path: /home/workerlib-ui/upload #上传路径的绝对路径
         video:
-          maxSize: 200 #上传文件最大尺寸，单位: MB
-          mimeType: mp4, ogg, webm #允许上传的文件格式
+          maxSize: 500 #上传文件最大尺寸，单位: MB
+          mimeType: mp4, ogg, webm, ppt, pptx #允许上传的文件格式
           path: /home/workerlib-ui/upload/courseware/video #上传路径的绝对路径
       lecturer:
         photo:
@@ -197,7 +198,7 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/ #注册中心
 server:
-  port: 8888 #端口号
+  port: 6666 #端口号
 
 feign:
   hystrix:
@@ -257,4 +258,4 @@ qrcode:
   height: 80
   server: http://39.108.103.150:8000/#
 
-enableTasks: true
+enableTasks: false
