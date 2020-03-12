@@ -11,7 +11,6 @@ public class Privilege extends Queryable<Privilege> implements Serializable {
     private String privilegeId;     //权限表ID
     private String groupId;         //分组表id
     private UUID roleId;          //角色id
-    private String aclId;
     private int canAdd;
     private int canDelete;
     private int canUpdate;
@@ -55,14 +54,6 @@ public class Privilege extends Queryable<Privilege> implements Serializable {
 
     public void setRoleId(UUID roleId) {
         this.roleId = roleId;
-    }
-
-    public String getAclId() {
-        return aclId;
-    }
-
-    public void setAclId(String aclId) {
-        this.aclId = aclId;
     }
 
     public int getCanAdd() {

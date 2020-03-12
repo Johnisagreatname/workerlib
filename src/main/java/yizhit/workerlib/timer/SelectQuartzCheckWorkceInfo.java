@@ -28,7 +28,7 @@ public class SelectQuartzCheckWorkceInfo {
 
     public void batchInsertCheckWorkceInfo() {
 
-        if(!enableTasks) {
+        if(enableTasks!=null && !enableTasks) {
             return;
         }
 

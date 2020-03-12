@@ -22,6 +22,8 @@ import java.util.*;
 public class SelectQuartzAllUserInfo {
     private static final Logger log = LogManager.getLogger(SelectQuartzAllUserInfo.class);
 
+    public static boolean isActived = false;
+
     @Value("${entity.security.encrypt.MD5.publicKey:ccait}")
     private String md5PublicKey;
 
@@ -49,7 +51,7 @@ public class SelectQuartzAllUserInfo {
 
     public void batchInsertArchivesInfo(){
 
-        if(!enableTasks) {
+        if(enableTasks!=null && !enableTasks) {
             return;
         }
 

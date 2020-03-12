@@ -19,13 +19,14 @@ import java.util.*;
 public class SelectQuartzProjectInfo {
 
     private static final Logger log = LogManager.getLogger(SelectQuartzProjectInfo.class);
+    public static boolean isActived = false;
 
     @Value("${enableTasks:false}")
     private Boolean enableTasks;
 
     public  void batchInsertProjectInfo(){
 
-        if(!enableTasks) {
+        if(enableTasks!=null && !enableTasks) {
             return;
         }
 

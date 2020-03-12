@@ -9,6 +9,8 @@ import java.io.Serializable;
 @Tablename("alluser")
 @DataSource("workerlib2")
 public class AllUserInfoUpdate extends Queryable<AllUserInfoUpdate> implements Serializable {
+
+    private Integer id;
     private String eafId;           //用户id
 
     private String eafName;         //用户名
@@ -157,5 +159,13 @@ public class AllUserInfoUpdate extends Queryable<AllUserInfoUpdate> implements S
 
     public void setEafStatus(String eafStatus) {
         this.eafStatus = eafStatus;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -27,7 +27,7 @@ public class SelectQuartzUnitrInfo {
 
     public void batchInsertUnitrInfo(String uid){
 
-        if(!enableTasks) {
+        if(enableTasks!=null && !enableTasks) {
             return;
         }
 
