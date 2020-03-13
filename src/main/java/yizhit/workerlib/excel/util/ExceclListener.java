@@ -60,7 +60,7 @@ public class ExceclListener extends AnalysisEventListener<coursewareData> {
         int cultivateId = 0;
         int courId = 0;
 
-        for(int i=0;i<datas.size();i++){
+        for(int i=1;i<datas.size();i++){
             try {
             if(datas.get(i).getCourseType() == null){
                 continue;

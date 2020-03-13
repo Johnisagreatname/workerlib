@@ -23,7 +23,7 @@ public class ArchivesController extends BaseController {
     @RequestMapping(value = "archives",method = RequestMethod.GET)
     public ResponseData SynArchives(){
         if(SelectQuartzArvhivesInfo.isActived) {
-            return success("数据正在同步中，请稍后查看数据...");
+            return message("数据正在同步中，请稍后查看数据...");
         }
         ThreadUtils.async(new Runnable() {
             @Override
@@ -38,7 +38,7 @@ public class ArchivesController extends BaseController {
                 }
             }
         });
-        return success("数据同步执行成功");
+        return message("数据同步执行成功");
     }
 
 
