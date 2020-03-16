@@ -1,3 +1,7 @@
+
+
+
+
 package yizhit.workerlib.controllers;
 
 import ccait.ccweb.annotation.AccessCtrl;
@@ -21,7 +25,7 @@ public class AlluserController extends BaseController {
     @RequestMapping(value = "alluser",method = RequestMethod.GET)
     public ResponseData SynAlluser(){
         if(SelectQuartzAllUserInfo.isActived) {
-            return success("数据正在同步中，请稍后查看数据...");
+            return message("数据正在同步中，请稍后查看数据...");
         }
         ThreadUtils.async(new Runnable() {
             @Override
@@ -36,7 +40,7 @@ public class AlluserController extends BaseController {
                 }
             }
         });
-        return success("数据同步执行成功");
+        return message("数据同步执行成功");
     }
 
 
