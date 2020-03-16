@@ -1,7 +1,7 @@
 package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.*;
-import ccait.ccweb.filter.RequestWrapper;
+import ccait.ccweb.filter.CCWebRequestWrapper;
 import entity.query.Datetime;
 import org.springframework.stereotype.Component;
 import yizhit.workerlib.entites.Group;
@@ -63,7 +63,7 @@ public final class PrjectTrigger {
             privilege.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
             privilege.insert();
         }
-        RequestWrapper wrapper = (RequestWrapper) request;
+        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
         wrapper.setPostParameter(list);
     }
 

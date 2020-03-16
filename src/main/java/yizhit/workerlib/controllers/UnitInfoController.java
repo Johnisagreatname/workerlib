@@ -2,7 +2,7 @@ package yizhit.workerlib.controllers;
 
 import ccait.ccweb.annotation.AccessCtrl;
 import ccait.ccweb.controllers.BaseController;
-import ccait.ccweb.model.ResponseData;
+import ccait.ccweb.entites.ResponseData;
 import entity.tool.util.ThreadUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +23,7 @@ public class UnitInfoController extends BaseController {
     @RequestMapping(value = "unit",method = RequestMethod.POST)
     public ResponseData SynUnit(){
         if(SelectQuartzArvhivesInfo.isActived) {
-            return message("数据正在同步中，请稍后查看数据...");
+            return success("数据正在同步中，请稍后查看数据...");
         }
         ThreadUtils.async(new Runnable() {
             @Override
@@ -38,6 +38,6 @@ public class UnitInfoController extends BaseController {
                 }
             }
         });
-        return message("数据同步执行成功");
+        return success("数据同步执行成功");
     }
 }

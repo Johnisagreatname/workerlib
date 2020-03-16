@@ -2,7 +2,7 @@ package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.OnInsert;
 import ccait.ccweb.annotation.Trigger;
-import ccait.ccweb.filter.RequestWrapper;
+import ccait.ccweb.filter.CCWebRequestWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -64,7 +64,7 @@ public class UserGroupRoleTrigger {
                 user.where("[id]=#{id}").update("[password]=''");
             }
         }
-        RequestWrapper wrapper = (RequestWrapper) request;
+        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
         wrapper.setPostParameter(list);
     }
 }

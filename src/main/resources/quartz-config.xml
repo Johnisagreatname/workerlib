@@ -150,6 +150,10 @@
         <!-- cron表达式，执行时间  每10分钟执行一次 -->
         <property name="cronExpression" value="0 */20 * * * ?"></property>
     </bean>
+
+
+
+
     <!-- 启动定时器 -->
     <bean id="springJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
