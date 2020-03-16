@@ -2,7 +2,7 @@ package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.OnInsert;
 import ccait.ccweb.annotation.Trigger;
-import ccait.ccweb.filter.RequestWrapper;
+import ccait.ccweb.filter.CCWebRequestWrapper;
 import ccait.ccweb.utils.EncryptionUtil;
 import ccait.ccweb.utils.FastJsonUtils;
 import ccait.ccweb.utils.UploadUtils;
@@ -62,7 +62,7 @@ public class AllUserTrigger {
         for (Map item : list) {
             genQrCode(item, null, md5PublicKey, aesPublicKey, qrCodePath, encoding, width, height, qrcodeServer, true);
         }
-        RequestWrapper wrapper = (RequestWrapper) request;
+        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
         wrapper.setPostParameter(list);
     }
 

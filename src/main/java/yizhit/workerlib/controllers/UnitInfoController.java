@@ -2,7 +2,7 @@ package yizhit.workerlib.controllers;
 
 import ccait.ccweb.annotation.AccessCtrl;
 import ccait.ccweb.controllers.BaseController;
-import ccait.ccweb.model.ResponseData;
+import ccait.ccweb.entites.ResponseData;
 import entity.tool.util.ThreadUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

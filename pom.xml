@@ -20,16 +20,16 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>ccweb</id>-->
-            <!--<url>https://raw.github.com/linlurui/ccweb/snapshots</url>-->
-            <!--<snapshots>-->
-                <!--<enabled>true</enabled>-->
-                <!--<updatePolicy>always</updatePolicy>-->
-            <!--</snapshots>-->
-        <!--</repository>-->
-    <!--</repositories>-->
+    <repositories>
+        <repository>
+            <id>ccweb</id>
+            <url>https://raw.github.com/linlurui/ccweb/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
