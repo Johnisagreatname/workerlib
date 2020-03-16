@@ -1,3 +1,7 @@
+
+
+
+
 package yizhit.workerlib.controllers;
 
 import ccait.ccweb.annotation.AccessCtrl;
@@ -23,7 +27,7 @@ public class UnitInfoController extends BaseController {
     @RequestMapping(value = "unit",method = RequestMethod.POST)
     public ResponseData SynUnit(){
         if(SelectQuartzArvhivesInfo.isActived) {
-            return success("数据正在同步中，请稍后查看数据...");
+            return message("数据正在同步中，请稍后查看数据...");
         }
         ThreadUtils.async(new Runnable() {
             @Override
@@ -38,6 +42,6 @@ public class UnitInfoController extends BaseController {
                 }
             }
         });
-        return success("数据同步执行成功");
+        return message("数据同步执行成功");
     }
 }

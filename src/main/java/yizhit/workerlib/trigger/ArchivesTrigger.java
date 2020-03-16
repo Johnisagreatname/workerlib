@@ -1,8 +1,8 @@
 package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.*;
-import ccait.ccweb.filter.RequestWrapper;
-import ccait.ccweb.model.QueryInfo;
+import ccait.ccweb.filter.CCWebRequestWrapper;
+import ccait.ccweb.entites.QueryInfo;
 import entity.query.Datetime;
 import org.springframework.stereotype.Component;
 import yizhit.workerlib.entites.ArchivesInfo;
@@ -42,7 +42,7 @@ public final class ArchivesTrigger {
             lvedproject.insert();
 
         }
-        RequestWrapper wrapper = (RequestWrapper) request;
+        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
         wrapper.setPostParameter(list);
     }
 
@@ -86,7 +86,7 @@ public final class ArchivesTrigger {
             lvedproject.insert();
 
         }
-        RequestWrapper wrapper = (RequestWrapper) request;
+        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
         wrapper.setPostParameter(queryInfo);
     }
 }
