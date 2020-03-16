@@ -24,7 +24,7 @@ import java.net.MalformedURLException;
 //@EnableZuulProxy
 @EnableWebFlux
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = {"ccait.ccweb", "yizhit.workerlib"},
+@SpringBootApplication(scanBasePackages = {"yizhit.workerlib", "ccait.ccweb"},
         exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 

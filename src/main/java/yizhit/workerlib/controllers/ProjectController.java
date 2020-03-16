@@ -17,7 +17,7 @@ import yizhit.workerlib.timer.SelectQuartzArvhivesInfo;
 import yizhit.workerlib.timer.SelectQuartzProjectInfo;
 
 @RestController
-@RequestMapping("/asyncapi/sync")
+@RequestMapping("asyncapi/sync")
 public class ProjectController extends BaseController {
 
         /**
@@ -25,8 +25,8 @@ public class ProjectController extends BaseController {
          */
         @ResponseBody
         @AccessCtrl
-        @RequestMapping(value = "project",method = RequestMethod.POST)
-        public ResponseData  SynAlluser(){
+        @RequestMapping(value = "/project",method = RequestMethod.POST)
+        public ResponseData  sync(){
             if(SelectQuartzProjectInfo.isActived) {
                 return message("数据正在同步中，请稍后查看数据...");
             }

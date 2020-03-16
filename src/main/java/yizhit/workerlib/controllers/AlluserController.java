@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import yizhit.workerlib.timer.SelectQuartzAllUserInfo;
 
 @RestController
-@RequestMapping("/asyncapi/sync")
+@RequestMapping("asyncapi/sync")
 public class AlluserController extends BaseController {
     /**
      * 同步所有员工信息
      */
     @ResponseBody
     @AccessCtrl
-    @RequestMapping(value = "alluser",method = RequestMethod.GET)
-    public ResponseData SynAlluser(){
+    @RequestMapping(value = "/alluser",method = RequestMethod.POST)
+    public ResponseData sync(){
         if(SelectQuartzAllUserInfo.isActived) {
             return message("数据正在同步中，请稍后查看数据...");
         }
