@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 package yizhit.workerlib.excel.controller;
 
 import ccait.ccweb.annotation.AccessCtrl;
@@ -13,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 import yizhit.workerlib.excel.pojo.coursewareData;
 import yizhit.workerlib.excel.pojo.excelData;
 import yizhit.workerlib.excel.util.ExceclListener;
-import yizhit.workerlib.excel.util.ExceclUserListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -57,7 +67,7 @@ public class ExcleController extends BaseController {
         }
         byte[] bytes = ImageUtils.getBytesForBase64(file.get("file").toString());
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        EasyExcel.read(inputStream, excelData.class, new ExceclUserListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
+        EasyExcel.read(inputStream, excelData.class, new ExceclListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
 
     }
 }
