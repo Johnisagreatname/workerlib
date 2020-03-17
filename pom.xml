@@ -21,14 +21,14 @@
     </parent>
 
     <repositories>
-<!--        <repository>-->
-<!--            <id>ccweb</id>-->
-<!--            <url>https://raw.github.com/linlurui/ccweb/snapshots</url>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--                <updatePolicy>always</updatePolicy>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
+        <repository>
+            <id>ccweb</id>
+            <url>https://raw.github.com/linlurui/ccweb/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
