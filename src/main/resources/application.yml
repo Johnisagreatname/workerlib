@@ -85,12 +85,12 @@ entity:
     workerlib:
       cultivate_video:
         file:
-          maxSize: 200 #上传文件最大尺寸，单位: MB
+          maxSize: 2500 #上传文件最大尺寸，单位: MB
           mimeType: gif, jpg, png, jpeg, mp4, ogg, webm #允许上传的文件格式
           path: /home/workerlib-ui/upload/cultivate
       indexVideo:
         file:
-          maxSize: 200 #上传文件最大尺寸，单位: MB
+          maxSize: 2500 #上传文件最大尺寸，单位: MB
           mimeType: gif, jpg, png, jpeg, mp4, ogg, webm #允许上传的文件格式
           path: /home/workerlib-ui/upload/cultivate
       people: #表名
@@ -153,7 +153,7 @@ entity:
           path: /home/workerlib-ui/upload #上传路径的绝对路径
         video:
           maxSize: 200 #上传文件最大尺寸，单位: MB
-          mimeType: mp4, ogg, webm #允许上传的文件格式
+          mimeType: mp4, ogg, webm, ppt, pptx #允许上传的文件格式
           path: /home/workerlib-ui/upload/courseware/video #上传路径的绝对路径
       lecturer:
         photo:
@@ -167,7 +167,7 @@ entity:
       scalRatio: 0 #缩放比率(百分比)
       watermark: watermark.png #水印
 
-  enableFlux: false   #是否开启web异步响应流
+  enableFlux: true   #是否开启web异步响应流
 
   #  ip:
   #    whiteList:  #IP白名单
@@ -250,8 +250,10 @@ log4j:
 
 # 4.websocket配置
 websocket:
-  url: ws://127.0.0.1:8777/websocket
-  enable: false
+  server: 127.0.0.1
+  enable: true
+  protocol: ws
+  port: 8080
 
 qrcode:
   width: 80
