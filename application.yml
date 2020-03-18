@@ -250,8 +250,10 @@ log4j:
 
 # 4.websocket配置
 websocket:
-  url: ws://127.0.0.1:8777/websocket
-  enable: false
+  server: 127.0.0.1
+  enable: true
+  protocol: ws
+  port: 8080
 
 qrcode:
   width: 80
