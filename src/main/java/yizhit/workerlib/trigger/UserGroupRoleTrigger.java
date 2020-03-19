@@ -49,26 +49,33 @@ public class UserGroupRoleTrigger {
     @OnInsert
     public void onInsert(List<Map<String, Object>> list, HttpServletRequest request) throws Exception {
 
-        if(role == null) {
-            return;
+        try {
+            if(role == null) {
+                return;
+            }
+
+            for (Map item : list) {
+                if(item.containsKey("roleId")) {
+                    continue;
+                }
+
+                if(item.containsKey("userId")) {
+                    continue;
+                }
+
+                if(role.getRoleName().equals(item.get("roleId"))) {
+                    UserModel user = new UserModel();
+                    user.setId(Integer.parseInt(item.get("userId").toString()));
+                    user.where("[id]=#{id}").update("[password]=''");
+                }
+            }
+            CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
+            wrapper.setPostParameter(list);
         }
 
-        for (Map item : list) {
-            if(item.containsKey("roleId")) {
-                continue;
-            }
-
-            if(item.containsKey("userId")) {
-                continue;
-            }
-
-            if(role.getRoleName().equals(item.get("roleId"))) {
-                UserModel user = new UserModel();
-                user.setId(Integer.parseInt(item.get("userId").toString()));
-                user.where("[id]=#{id}").update("[password]=''");
-            }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw e;
         }
-        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
-        wrapper.setPostParameter(list);
     }
 }
