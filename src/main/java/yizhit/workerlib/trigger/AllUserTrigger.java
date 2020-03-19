@@ -54,7 +54,8 @@ public class AllUserTrigger {
     private String encoding;
 
     @Value("${qrcode.server}")      //IP
-    private String qrcodeServer ;
+    private String qrcodeServer;
+
     /***
      * 新增数据事件
      * @param list （提交的数据）
@@ -63,11 +64,17 @@ public class AllUserTrigger {
      */
     @OnInsert
     public void onInsert(List<Map<String, Object>> list, HttpServletRequest request) throws Exception {
-        for (Map item : list) {
-            genQrCode(item, null, md5PublicKey, aesPublicKey, qrCodePath, encoding, width, height, qrcodeServer, true);
+        try {
+            for (Map item : list) {
+                genQrCode(item, null, md5PublicKey, aesPublicKey, qrCodePath, encoding, width, height, qrcodeServer, true);
+            }
+            CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
+            wrapper.setPostParameter(list);
         }
-        CCWebRequestWrapper wrapper = (CCWebRequestWrapper) request;
-        wrapper.setPostParameter(list);
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
 
