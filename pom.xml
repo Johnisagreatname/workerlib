@@ -16,32 +16,43 @@
 
     <parent>
         <artifactId>ccweb-framework</artifactId>
-        <groupId>ccait</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <groupId>ccait.cn</groupId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <repositories>
-<!--        <repository>-->
-<!--            <id>ccweb</id>-->
-<!--            <url>https://raw.github.com/linlurui/ccweb/snapshots</url>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--                <updatePolicy>always</updatePolicy>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
+        <repository>
+            <id>ccweb</id>
+            <url>https://raw.github.com/linlurui/ccweb/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>ccait</groupId>
+            <groupId>ccait.cn</groupId>
             <artifactId>ccweb-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>2.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.16</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
