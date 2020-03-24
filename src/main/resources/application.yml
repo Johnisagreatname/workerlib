@@ -177,22 +177,19 @@ entity:
 
   elasticSearch:
     enable: false
-    defaultMatch: match_all
     timeout: 10000
-    url: 127.0.0.1:9200;127.0.0.1:9500 #分号分隔
-    indexs:
+    cluster-name: 127.0.0.1:9200 #逗号分隔
+    indexs: #索引设置
       user_username: user.username #key＝indexname, value=[{tablename}].{fieldname}
-    highlight:
-      user:
-        fields: username ，逗号分隔
+    highlight: #高亮设置
+      user: #表名
+        fields: username #字段名，逗号分隔
         fragmentSize: 200
         preTags: <em>
         postTags: </em>
         script: painless
         painless:
           password: "doc['password']=\"*****\"; return doc['password'];"
-
-
 
 # 2.SpringCloud配置
 eureka:
@@ -255,7 +252,7 @@ websocket:
   server: 127.0.0.1
   enable: true
   protocol: ws
-  port: 8080
+  port: 6666
 
 qrcode:
   width: 80
@@ -263,3 +260,5 @@ qrcode:
   server: http://39.108.103.150:8000/#
 
 enableTasks: false
+
+

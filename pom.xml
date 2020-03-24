@@ -23,7 +23,7 @@
     <repositories>
         <repository>
             <id>ccweb</id>
-            <url>https://raw.github.com/linlurui/ccweb/snapshots</url>
+            <url>https://raw.github.com/linlurui/ccweb/release</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
