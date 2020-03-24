@@ -3,6 +3,8 @@
 
 entity:
   lang: cn
+  account: hujiang
+  license: 9C2196F854EB50D883CE418569EA5516
   datasource: workerlib #可通过url的{datasource}参数访问到该数据库，没有在此设置的environment不能通过url访问到
   queryable:
     configFile: db-config.xml #数据库配置路径
