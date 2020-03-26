@@ -1,3 +1,29 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package yizhit.workerlib;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +50,7 @@ import java.net.MalformedURLException;
 //@EnableZuulProxy
 @EnableWebFlux
 @EnableEurekaClient
-@SpringBootApplication(scanBasePackages = {"yizhit.workerlib", "ccait.ccweb"},
+@SpringBootApplication(scanBasePackages = {"ccait.ccweb", "yizhit.workerlib"},
         exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 
