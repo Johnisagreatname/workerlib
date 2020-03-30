@@ -36,18 +36,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.web.reactive.config.EnableWebFlux;
-import yizhit.workerlib.timer.SelectQuartzArvhivesInfo;
-import yizhit.workerlib.timer.SelectQuartzProjectInfo;
 
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 
-
-//@EnableHystrixDashboard
-//@EnableDiscoveryClient
-//@EnableFeignClients
-//@EnableHystrix
-//@EnableZuulProxy
 @EnableWebFlux
 @EnableEurekaClient
 @SpringBootApplication(scanBasePackages = {"ccait.ccweb", "yizhit.workerlib"},
