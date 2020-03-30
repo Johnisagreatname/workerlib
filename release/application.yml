@@ -3,9 +3,26 @@
 
 entity:
   lang: cn
-  datasource: workerlib #可通过url的{datasource}参数访问到该数据库，没有在此设置的environment不能通过url访问到
-  queryable:
-    configFile: db-config.xml #数据库配置路径
+  account: hujiang
+  license: F71ABE6F8DBA5D934BB5F255B258841D
+  datasource:
+    activated: workerlib #可通过url的{datasource}参数访问到该数据库，没有在此设置的environment不能通过url访问到
+    environments:
+      workerlib:
+        id: workerlib
+        type: mysql
+        default: true
+        driver: com.mysql.jdbc.Driver
+        url: jdbc:mysql://rm-wz9b0hz7c6y891f98no.mysql.rds.aliyuncs.com:3306/workerlib?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT
+        username: workerlib
+        password: WorkerLib_NoBug
+      workerlib2:
+        id: workerlib
+        type: mysql
+        driver: com.mysql.jdbc.Driver
+        url: jdbc:mysql://rm-wz9b0hz7c6y891f98no.mysql.rds.aliyuncs.com:3306/workerlib?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=CTT
+        username: workerlib
+        password: WorkerLib_NoBug
   ignoreTotalCount: true #忽略查询总数
   package: ccait.ccweb.entites #实体类生成包路径
   suffix: Entity #实体类生成类名后辍

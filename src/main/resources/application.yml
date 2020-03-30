@@ -4,10 +4,11 @@
 entity:
   lang: cn
   account: hujiang
-  license: 9C2196F854EB50D883CE418569EA5516
-  datasource: workerlib #可通过url的{datasource}参数访问到该数据库，没有在此设置的environment不能通过url访问到
-  queryable:
+  license: F71ABE6F8DBA5D934BB5F255B258841D
+  datasource:
+    activated: workerlib #可通过url的{datasource}参数访问到该数据库，没有在此设置的environment不能通过url访问到
     configFile: db-config.xml #数据库配置路径
+
   ignoreTotalCount: true #忽略查询总数
   package: ccait.ccweb.entites #实体类生成包路径
   suffix: Entity #实体类生成类名后辍
