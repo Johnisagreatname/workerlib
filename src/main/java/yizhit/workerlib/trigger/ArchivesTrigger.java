@@ -1,9 +1,3 @@
-
-
-
-
-
-
 package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.*;
@@ -12,6 +6,7 @@ import ccait.ccweb.entites.QueryInfo;
 import entity.query.Datetime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import yizhit.workerlib.entites.ArchivesInfo;
 import yizhit.workerlib.entites.InvoLvedproject;
@@ -24,6 +19,7 @@ import java.util.Map;
 
 @Component
 @Trigger(tablename = "archives") //触发器注解
+@Order(value = 100)
 public final class ArchivesTrigger {
 
     private static final Logger log = LogManager.getLogger(ArchivesTrigger.class);

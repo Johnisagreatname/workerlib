@@ -1,14 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
 package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.*;
@@ -16,6 +5,7 @@ import ccait.ccweb.filter.CCWebRequestWrapper;
 import entity.query.Datetime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import yizhit.workerlib.entites.Group;
 import yizhit.workerlib.entites.Privilege;
@@ -30,6 +20,7 @@ import java.util.UUID;
 
 @Component
 @Trigger(tablename = "project") //触发器注解
+@Order(value = 100)
 public class PrjectTrigger {
 
     private static final Logger log = LogManager.getLogger(PrjectTrigger.class);
@@ -49,7 +40,12 @@ public class PrjectTrigger {
                 group.setGroupId(groupId);
                 group.setGroupName((String)item.get("project_name"));
                 group.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
-                group.setUserPath(item.get("userPath").toString());
+                if(item.get("userPath") ==null){
+                    group.setUserPath("0");
+                }else {
+                    group.setUserPath(item.get("userPath").toString());
+                }
+
                 group.insert();
 
                 //查找管理员id
@@ -76,7 +72,11 @@ public class PrjectTrigger {
                 privilege.setCanList(1);
                 privilege.setCanQuery(1);
                 privilege.setScope(4);
-                privilege.setUserPath(item.get("userPath").toString());
+                if(item.get("userPath")==null){
+                    privilege.setUserPath("0");
+                }else {
+                    privilege.setUserPath(item.get("userPath").toString());
+                }
                 privilege.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
                 privilege.insert();
             }
