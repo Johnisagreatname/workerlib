@@ -20,6 +20,7 @@
                 <property name="username" value="workerlib" />
                 <property name="password" value="WorkerLib_NoBug" />
                 <property name="maxActive" value="50" />
+                <property name="minIdle" value="0" />
             </dataSource>
         </environment>
         <!--        <environment id="mssql" classScope="public">-->
