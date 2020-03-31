@@ -20,17 +20,6 @@
         <version>2.0.0-SNAPSHOT</version>
     </parent>
 
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>ccweb</id>-->
-<!--            <url>https://raw.github.com/linlurui/ccweb/release</url>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--                <updatePolicy>always</updatePolicy>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-
     <dependencies>
         <dependency>
             <groupId>ccait.cn</groupId>
@@ -41,13 +30,8 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>ccait.cn</groupId>
             <artifactId>ccweb-socket</artifactId>
@@ -64,7 +48,6 @@
             <version>8.0.16</version>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
