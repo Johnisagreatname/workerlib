@@ -178,7 +178,7 @@ entity:
 
   elasticSearch:
     enable: false
-    timeout: 10000
+    timeout: 100000
     cluster-name: 127.0.0.1:9200 #逗号分隔
     indexs: #索引设置
       user_username: user.username #key＝indexname, value=[{tablename}].{fieldname}
@@ -226,7 +226,7 @@ spring:
 
   mvc:
     async:
-      request-timeout: 5000
+      request-timeout: 50000
     static-path-pattern: /** #静态文件请求匹配方式
   resources:
     static-locations: classpath:/templates/,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
