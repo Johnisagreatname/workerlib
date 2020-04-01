@@ -1,58 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.OnInsert;
@@ -61,6 +6,7 @@ import ccait.ccweb.filter.CCWebRequestWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import java.sql.SQLException;
 import javax.annotation.PostConstruct;
@@ -74,6 +20,7 @@ import java.util.Map;
 @Component
 @Scope("prototype")
 @Trigger(tablename = "usergrouprole") //触发器注解
+@Order(value = 100)
 public class UserGroupRoleTrigger {
 
     private static final Logger log = LogManager.getLogger(UserGroupRoleTrigger.class);

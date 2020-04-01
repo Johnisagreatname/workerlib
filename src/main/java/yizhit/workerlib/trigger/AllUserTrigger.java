@@ -1,63 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package yizhit.workerlib.trigger;
 
 import ccait.ccweb.annotation.OnInsert;
@@ -70,8 +10,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import yizhit.workerlib.entites.AllUserInfo;
+import yizhit.workerlib.entites.UserGroupRoleModel;
 import yizhit.workerlib.entites.UserModel;
 import yizhit.workerlib.interfaceuilt.QRCodeUtil;
 import yizhit.workerlib.timer.SelectQuartzAllUserInfo;
@@ -87,6 +29,7 @@ import java.util.UUID;
 @Component
 @Scope("prototype")
 @Trigger(tablename = "alluser") //触发器注解
+@Order(value = 100)
 public class AllUserTrigger {
 
     private static final Logger log = LogManager.getLogger(AllUserTrigger.class);
@@ -143,13 +86,11 @@ public class AllUserTrigger {
 
             String Idnum = (String) item.get("cwrIdnum");
             userModel.setUsername(Idnum);
-//            String passWord = null;
-//            if (Idnum.length() < 6) {
-//                passWord = "123456";
-//            } else {
-//                passWord = Idnum.substring(Idnum.length() - 6);
-//            }
-
+            if (Idnum.length() < 6) {
+                userModel.setPassword(EncryptionUtil.md5("123456", md5PublicKey, encoding));
+            } else {
+                userModel.setPassword(EncryptionUtil.md5(Idnum.substring(Idnum.length() - 6), md5PublicKey, encoding));
+            }
             if(item.get("createBy") == null) {
                 userModel.setCreateBy(Integer.valueOf(1));
             }
@@ -162,13 +103,20 @@ public class AllUserTrigger {
             if(item.get("userPath") != null) {
                 userModel.setPath((String)item.get("userPath"));
             }
-            userModel.setPassword("");
             Integer userid = userModel.getId()==null ? 0 : userModel.getId().intValue();
 
             if(userid < 1) {
                 userid = userModel.insert();
             }
-
+            UserGroupRoleModel userGroupRoleModel = new UserGroupRoleModel();
+            String userGroupRoleId = UUID.randomUUID().toString().replace("-", "");
+            userGroupRoleModel.setUserGroupRoleId(userGroupRoleId);
+            userGroupRoleModel.setRoleId(UUID.fromString("703d28f4-a813-4a9b-87fb-971d0e31f9e5"));
+            userGroupRoleModel.setPath((String)item.get("userPath"));
+            userGroupRoleModel.setCreateOn(new Date());
+            userGroupRoleModel.setCreateBy((Integer) item.get("createBy"));
+            userGroupRoleModel.setUserId(userid);
+            userGroupRoleModel.insert();
             if(!formTrigger) {
                 item.put("userid", userid);
             }
