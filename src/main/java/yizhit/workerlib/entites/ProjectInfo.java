@@ -8,7 +8,7 @@ import entity.query.annotation.Tablename;
 import java.io.Serializable;
 
 @Tablename("project")
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = true)
 public class ProjectInfo  extends Queryable<ProjectInfo> implements Serializable {
 
     @Fieldname("project_id")

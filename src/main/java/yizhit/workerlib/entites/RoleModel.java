@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.UUID;
 
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2")
 @Tablename("role")
 public class RoleModel extends Queryable<RoleModel> {
     @PrimaryKey

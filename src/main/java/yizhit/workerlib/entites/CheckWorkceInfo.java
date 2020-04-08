@@ -8,7 +8,7 @@ import entity.query.annotation.Tablename;
 import java.io.Serializable;
 
 @Tablename("checkworkce")
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2")
 public class CheckWorkceInfo extends Queryable<CheckWorkceInfo> implements Serializable {
 
     @Fieldname("checkworkce_id")

@@ -5,7 +5,7 @@ import entity.query.annotation.DataSource;
 
 import java.io.Serializable;
 
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2")
 public class Group extends Queryable<Group> implements Serializable {
     private String groupId;         //分组ID
     private String groupName;       //分组名称

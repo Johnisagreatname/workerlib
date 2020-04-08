@@ -9,7 +9,7 @@ import entity.query.annotation.Tablename;
  * 工程下的用户信息表
  */
 @Tablename("archives")
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2")
 public class ArchivesInfoUpdate extends Queryable<ArchivesInfoUpdate> {
 
     @Fieldname("id")
