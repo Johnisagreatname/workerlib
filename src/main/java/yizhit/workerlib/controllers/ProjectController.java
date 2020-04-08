@@ -2,6 +2,14 @@
 
 
 
+
+
+
+
+
+
+
+
 package yizhit.workerlib.controllers;
 
 import ccait.ccweb.annotation.AccessCtrl;
@@ -26,7 +34,7 @@ public class ProjectController extends BaseController {
         @ResponseBody
         @AccessCtrl
         @RequestMapping(value = "/project",method = RequestMethod.POST)
-        public ResponseData  sync(){
+        public ResponseData sync(){
             if(SelectQuartzProjectInfo.isActived) {
                 return message("数据正在同步中，请稍后查看数据...");
             }
