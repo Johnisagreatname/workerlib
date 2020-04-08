@@ -1,13 +1,11 @@
 package yizhit.workerlib.timer;
 
-import ccait.ccweb.utils.FastJsonUtils;
-import com.alibaba.druid.pool.DruidPooledConnection;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import entity.query.Datetime;
+import entity.tool.util.FastJsonUtils;
 import entity.tool.util.RequestUtils;
 import entity.tool.util.StringUtils;
-import entity.tool.util.ThreadUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import yizhit.workerlib.entites.*;
 import yizhit.workerlib.interfaceuilt.FinalUtil;
 import yizhit.workerlib.interfaceuilt.SHA256;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -121,26 +118,9 @@ public class SelectQuartzArvhivesInfo {
             }
 
             for(ArchivesInfo info:arvhivesInfoListByInsert){
-                ThreadUtils.async(new Runnable(){
-                    @Override
-                    public void run() {
-                        importProjectWorkerHistory(info);
-                    }
-                });
-
-                ThreadUtils.async(new Runnable(){
-                    @Override
-                    public void run() {
-                        importProjectWorkerType(info);
-                    }
-                });
-
-                ThreadUtils.async(new Runnable(){
-                    @Override
-                    public void run() {
-                        importArchives(info, selectQuartzUnitrInfo);
-                    }
-                });
+                importProjectWorkerHistory(info);
+                importProjectWorkerType(info);
+                importArchives(info, selectQuartzUnitrInfo);
             }
 
             timerProfile.setValue(pageIndex);
@@ -165,7 +145,7 @@ public class SelectQuartzArvhivesInfo {
                     selectQuartzUnitrInfo.batchInsertUnitrInfo(info.getCwrComid());
                 }
                 ArchivesInfo archivesInfo = new ArchivesInfo();
-                archivesInfo.putDataSource(info.dataSource());
+                archivesInfo.setConnection(conn);
                 archivesInfo.setUserid(info.getUserid());
                 archivesInfo.setCwrPrjid(info.getCwrPrjid());
                 archivesInfo.setEafId(info.getEafId());
@@ -188,9 +168,9 @@ public class SelectQuartzArvhivesInfo {
                 archivesInfo.setCwrUserOut(info.getCwrUserOut());
                 ArchivesInfo js = archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").first();
 
-                js.putDataSource(info.dataSource());
+                js.setConnection(conn);
                 UserModel account = new UserModel();
-                account.putDataSource(info.dataSource());
+                account.setConnection(conn);
                 account.setUsername(info.getCwrIdnum());
                 account = account.where("username=#{username}").first();
                 if(account != null) {
@@ -218,19 +198,24 @@ public class SelectQuartzArvhivesInfo {
                             "[cwrWorktype]=#{cwrWorktype},[cwrUserIn]=#{cwrUserIn}");
                 }
                 conn.commit();
+                conn.close();
             }
         }catch (Exception e5){
+            log.error("插入项目下的人员信息出错： =============================================================>",e5);
+            log.error(new Date());
+            log.error(e5);
             try{
                 if(conn != null) {
                     conn.rollback();
+                    conn.close();
                 }
             }
             catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
-            log.error("插入项目下的人员信息出错： =============================================================>",e5);
-            log.error(new Date());
-            log.error(e5);
+        }
+        finally {
+            conn = null;
         }
     }
 
@@ -241,7 +226,7 @@ public class SelectQuartzArvhivesInfo {
             conn.setAutoCommit(false);
             //给所有人员表插入单位ID
             AllUserInfoUpdate allUserInfoUpdate = new AllUserInfoUpdate();
-            allUserInfoUpdate.putDataSource(info.dataSource());
+            allUserInfoUpdate.setConnection(conn);
             allUserInfoUpdate.setCwrIdnum(info.getCwrIdnum());
             allUserInfoUpdate.setUnitId(info.getCwrComid());
             allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").update("[unit_id]=#{unitId}");
@@ -256,7 +241,7 @@ public class SelectQuartzArvhivesInfo {
 
             //给所有工种表导入工种信息
             ProjectWorkType projectWorkType = new ProjectWorkType();
-            projectWorkType.putDataSource(info.dataSource());
+            projectWorkType.setConnection(conn);
             projectWorkType.setEafId(info.getUserid());
             projectWorkType.setProjectId(info.getCwrPrjid());
             projectWorkType.setWorkType(info.getCwrWorkName());
@@ -271,7 +256,7 @@ public class SelectQuartzArvhivesInfo {
 
             //给工种表导入工种信息
             WorkType workType = new WorkType();
-            workType.putDataSource(info.dataSource());
+            workType.setConnection(conn);
             workType.setEafId(allUserInfoUpdate.getEafId());
             workType.setWorkType(info.getCwrWorkName());
             workType.setCreateBy("1");
@@ -281,15 +266,22 @@ public class SelectQuartzArvhivesInfo {
                 workType.insert();
             }
             conn.commit();
+            conn.close();
         }catch(Exception e3){
+            log.error("插入项目下的人员信息出错： =============================================================>",e3);
+            log.error(new Date());
+            log.error(e3);
             try {
                 if(conn != null) {
                     conn.rollback();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            log.error(e3);
+        }
+        finally {
+            conn = null;
         }
     }
 
@@ -300,7 +292,7 @@ public class SelectQuartzArvhivesInfo {
             conn.setAutoCommit(false);
             //给历史记录表
             InvoLvedproject invoLvedproject = new InvoLvedproject();
-            invoLvedproject.putDataSource(info.dataSource());
+            invoLvedproject.setConnection(conn);
             invoLvedproject.setArchivesId(info.getUserid());
             invoLvedproject.setProjectId(info.getCwrPrjid());
             invoLvedproject.setUnitId(info.getCwrComid());
@@ -316,17 +308,24 @@ public class SelectQuartzArvhivesInfo {
                         "[createOn] = #{createOn},[createBy] = #{createBy}");
             }
             conn.commit();
+            conn.close();
         }
 
         catch(Exception e) {
+            log.error("插入项目下的人员信息出错： =============================================================>",e);
+            log.error(new Date());
+            log.error(e);
             try {
                 if(conn!=null) {
                     conn.rollback();
+                    conn.close();
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            log.error(e);
+        }
+        finally {
+            conn = null;
         }
     }
 

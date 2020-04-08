@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 所有人员信息
  */
 @Tablename("alluser")
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2")
 public class AllUserInfo extends Queryable<AllUserInfo> implements Serializable {
 
     private String eafId;           //用户id

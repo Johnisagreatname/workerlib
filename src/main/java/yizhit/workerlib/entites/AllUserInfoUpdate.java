@@ -7,7 +7,7 @@ import entity.query.annotation.Tablename;
 import java.io.Serializable;
 
 @Tablename("alluser")
-@DataSource("workerlib2")
+@DataSource(value = "workerlib2")
 public class AllUserInfoUpdate extends Queryable<AllUserInfoUpdate> implements Serializable {
 
     private Integer id;

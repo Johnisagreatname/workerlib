@@ -158,6 +158,15 @@ entity:
           maxSize: 200 #上传文件最大尺寸，单位: MB
           mimeType: mp4, ogg, webm, ppt, pptx #允许上传的文件格式
           path: /home/workerlib-ui/upload/courseware/video #上传路径的绝对路径
+      courseware2:
+        cover_picture:
+          maxSize: 5 #上传文件最大尺寸，单位: MB
+          mimeType: gif, jpg, png, jpeg #允许上传的文件格式
+          path: /home/workerlib-ui/upload #上传路径的绝对路径
+        video:
+          maxSize: 200 #上传文件最大尺寸，单位: MB
+          mimeType: mp4, ogg, webm, ppt, pptx #允许上传的文件格式
+          path: /home/workerlib-ui/upload/courseware/video #上传路径的绝对路径
       lecturer:
         photo:
           maxSize: 5 #上传文件最大尺寸，单位: MB
