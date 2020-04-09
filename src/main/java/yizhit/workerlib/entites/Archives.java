@@ -3,7 +3,7 @@ package yizhit.workerlib.entites;
 import entity.query.Queryable;
 import entity.query.annotation.DataSource;
 
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 public class Archives extends Queryable<Archives> {
     public String getIdNumber() {
         return id_number;
