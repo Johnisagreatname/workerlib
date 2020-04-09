@@ -5,7 +5,7 @@ import entity.query.annotation.DataSource;
 import entity.query.annotation.Tablename;
 
 @Tablename("timer_profile")
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 public class TimerProfile extends Queryable<TimerProfile> {
     private int id;
     private String key;

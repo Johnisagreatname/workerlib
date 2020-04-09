@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.UUID;
 
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 @Tablename("UserGroupRole")
 public class UserGroupRoleModel extends Queryable<UserGroupRoleModel> {
 

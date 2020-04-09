@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 @Tablename("user")
 public class UserModel extends Queryable<UserModel> {
 

@@ -55,66 +55,66 @@ public class SelectQuartzArvhivesInfo {
             List<ArchivesInfo> arvhivesInfoListByInsert = new ArrayList<ArchivesInfo>() ;
 
             for (ProjectInfo projectInfoitem:projectInfoList) {
-               try{
-                   timerProfile.setPid(projectInfoitem.getEafId());
-                   Optional<TimerProfile> optionals = profiles.stream().filter(a -> a.getPid().equals(projectInfoitem.getEafId())).findFirst();
-                   TimerProfile currentTimerProfile = null;
-                   if (optionals.isPresent()) {
-                       currentTimerProfile = optionals.get();
-                   }
+                try{
+                    timerProfile.setPid(projectInfoitem.getEafId());
+                    Optional<TimerProfile> optionals = profiles.stream().filter(a -> a.getPid().equals(projectInfoitem.getEafId())).findFirst();
+                    TimerProfile currentTimerProfile = null;
+                    if (optionals.isPresent()) {
+                        currentTimerProfile = optionals.get();
+                    }
 
-                   if (currentTimerProfile != null) {
-                       pageIndex = currentTimerProfile.getValue();
-                   } else {
-                       timerProfile.setValue(1);
-                       Integer i = timerProfile.insert();
-                       pageIndex = 1;
-                   }
+                    if (currentTimerProfile != null) {
+                        pageIndex = currentTimerProfile.getValue();
+                    } else {
+                        timerProfile.setValue(1);
+                        Integer i = timerProfile.insert();
+                        pageIndex = 1;
+                    }
 
-                   //拼接密文
-                   StringBuilder sb = new StringBuilder();
-                   jsonObject.put("prjid", projectInfoitem.getEafId());
-                   jsonObject.put("pageNum", pageIndex);
-                   String formatDate = Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-                   sb.append("appid=appid1").append("&data=" + jsonObject.toJSONString()).append("&format=json").append("&method=com2user.info").append("&nonce=123456").append("&timestamp=" + formatDate).append("&version=1.0").append("&appsecret=123456");
-                   String hex = sb.toString().toLowerCase();
-                   String s = SHA256.getSHA256StrJava(hex);
-                   log.info("cd:" + s);
-                   log.info(formatDate);
-                   //发送请求
-                   params.put("method", "com2user.info");
-                   params.put("format", "json");
-                   params.put("version", "1.0");
-                   params.put("appid", "appid1");
-                   params.put("timestamp", formatDate);
-                   params.put("nonce", "123456");
-                   params.put("sign", s);
-                   params.put("data", jsonObject.toJSONString());
-                   String str = params.toJSONString();
-                   log.info("params:  " + str);
-                   HashMap<String, String> header = new HashMap<String, String>();
-                   header.put("Content-Type", "application/json");
-                   String result = RequestUtils.post(FinalUtil.url, str, header);
-                   JSONObject json = JSONObject.parseObject(result);
+                    //拼接密文
+                    StringBuilder sb = new StringBuilder();
+                    jsonObject.put("prjid", projectInfoitem.getEafId());
+                    jsonObject.put("pageNum", pageIndex);
+                    String formatDate = Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+                    sb.append("appid=appid1").append("&data=" + jsonObject.toJSONString()).append("&format=json").append("&method=com2user.info").append("&nonce=123456").append("&timestamp=" + formatDate).append("&version=1.0").append("&appsecret=123456");
+                    String hex = sb.toString().toLowerCase();
+                    String s = SHA256.getSHA256StrJava(hex);
+                    log.info("cd:" + s);
+                    log.info(formatDate);
+                    //发送请求
+                    params.put("method", "com2user.info");
+                    params.put("format", "json");
+                    params.put("version", "1.0");
+                    params.put("appid", "appid1");
+                    params.put("timestamp", formatDate);
+                    params.put("nonce", "123456");
+                    params.put("sign", s);
+                    params.put("data", jsonObject.toJSONString());
+                    String str = params.toJSONString();
+                    log.info("params:  " + str);
+                    HashMap<String, String> header = new HashMap<String, String>();
+                    header.put("Content-Type", "application/json");
+                    String result = RequestUtils.post(FinalUtil.url, str, header);
+                    JSONObject json = JSONObject.parseObject(result);
 
-                   List<ArchivesInfo> archivesInfoList = new ArrayList<ArchivesInfo>();
-                   // 数据获取正确
-                   if (json.containsKey("code") && json.get("code").equals("0")) {
-                       array = json.getJSONObject("data").getJSONArray("list");
-                       String text = array.toJSONString();
-                       archivesInfoList = FastJsonUtils.toList(text, ArchivesInfo.class);
-                       if (archivesInfoList.size() == 500) {
-                           pageIndex++;
-                       }
-                       for (ArchivesInfo info : archivesInfoList) {
-                           arvhivesInfoListByInsert.add(info);
-                       }
-                   }else {
-                       System.out.println("error:  " + result);
-                   }
-               }catch (Exception e1){
-                   log.error("获取所有工程id失败：========================================================》",e1);
-               }
+                    List<ArchivesInfo> archivesInfoList = new ArrayList<ArchivesInfo>();
+                    // 数据获取正确
+                    if (json.containsKey("code") && json.get("code").equals("0")) {
+                        array = json.getJSONObject("data").getJSONArray("list");
+                        String text = array.toJSONString();
+                        archivesInfoList = FastJsonUtils.toList(text, ArchivesInfo.class);
+                        if (archivesInfoList.size() == 500) {
+                            pageIndex++;
+                        }
+                        for (ArchivesInfo info : archivesInfoList) {
+                            arvhivesInfoListByInsert.add(info);
+                        }
+                    }else {
+                        System.out.println("error:  " + result);
+                    }
+                }catch (Exception e1){
+                    log.error("获取所有工程id失败：========================================================》",e1);
+                }
             }
 
             for(ArchivesInfo info:arvhivesInfoListByInsert){
@@ -132,10 +132,10 @@ public class SelectQuartzArvhivesInfo {
     }
 
     private void importArchives(ArchivesInfo info, SelectQuartzUnitrInfo selectQuartzUnitrInfo) {
-        Connection conn = null;
+//        Connection conn = null;
         try{
-            conn = info.dataSource().getConnection();
-            conn.setAutoCommit(false);
+//            conn = info.dataSource().getConnection();
+//            conn.setAutoCommit(false);
             if(info.getEafName() != null && !Pattern.compile("[0-9]*").matcher(info.getEafName()).matches()){
                 info.setLeave(2);
                 if("进行中".equals(info.getCwrUserStatus())) {
@@ -145,7 +145,7 @@ public class SelectQuartzArvhivesInfo {
                     selectQuartzUnitrInfo.batchInsertUnitrInfo(info.getCwrComid());
                 }
                 ArchivesInfo archivesInfo = new ArchivesInfo();
-                archivesInfo.setConnection(conn);
+//                archivesInfo.setConnection(conn);
                 archivesInfo.setUserid(info.getUserid());
                 archivesInfo.setCwrPrjid(info.getCwrPrjid());
                 archivesInfo.setEafId(info.getEafId());
@@ -168,9 +168,9 @@ public class SelectQuartzArvhivesInfo {
                 archivesInfo.setCwrUserOut(info.getCwrUserOut());
                 ArchivesInfo js = archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").first();
 
-                js.setConnection(conn);
+//                js.setConnection(conn);
                 UserModel account = new UserModel();
-                account.setConnection(conn);
+//                account.setConnection(conn);
                 account.setUsername(info.getCwrIdnum());
                 account = account.where("username=#{username}").first();
                 if(account != null) {
@@ -197,36 +197,36 @@ public class SelectQuartzArvhivesInfo {
                             "[createBy]=#{createBy},[eafRLeftid]=#{eafRLeftid},[cwrWorkclassId]=#{cwrWorkclassId}," +
                             "[cwrWorktype]=#{cwrWorktype},[cwrUserIn]=#{cwrUserIn}");
                 }
-                conn.commit();
-                conn.close();
+//                conn.commit();
+//                conn.close();
             }
         }catch (Exception e5){
             log.error("插入项目下的人员信息出错： =============================================================>",e5);
             log.error(new Date());
             log.error(e5);
-            try{
-                if(conn != null) {
-                    conn.rollback();
-                    conn.close();
-                }
-            }
-            catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
+//            try{
+//                if(conn != null) {
+//                    conn.rollback();
+//                    conn.close();
+//                }
+//            }
+//            catch (Exception e) {
+//                log.error(e.getMessage(), e);
+//            }
         }
         finally {
-            conn = null;
+//            conn = null;
         }
     }
 
-   private void importProjectWorkerType(ArchivesInfo info) {
-        Connection conn = null;
+    private void importProjectWorkerType(ArchivesInfo info) {
+//        Connection conn = null;
         try{
-            conn = info.dataSource().getConnection();
-            conn.setAutoCommit(false);
+//            conn = info.dataSource().getConnection();
+//            conn.setAutoCommit(false);
             //给所有人员表插入单位ID
             AllUserInfoUpdate allUserInfoUpdate = new AllUserInfoUpdate();
-            allUserInfoUpdate.setConnection(conn);
+//            allUserInfoUpdate.setConnection(conn);
             allUserInfoUpdate.setCwrIdnum(info.getCwrIdnum());
             allUserInfoUpdate.setUnitId(info.getCwrComid());
             allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").update("[unit_id]=#{unitId}");
@@ -241,7 +241,7 @@ public class SelectQuartzArvhivesInfo {
 
             //给所有工种表导入工种信息
             ProjectWorkType projectWorkType = new ProjectWorkType();
-            projectWorkType.setConnection(conn);
+//            projectWorkType.setConnection(conn);
             projectWorkType.setEafId(info.getUserid());
             projectWorkType.setProjectId(info.getCwrPrjid());
             projectWorkType.setWorkType(info.getCwrWorkName());
@@ -256,7 +256,7 @@ public class SelectQuartzArvhivesInfo {
 
             //给工种表导入工种信息
             WorkType workType = new WorkType();
-            workType.setConnection(conn);
+//            workType.setConnection(conn);
             workType.setEafId(allUserInfoUpdate.getEafId());
             workType.setWorkType(info.getCwrWorkName());
             workType.setCreateBy("1");
@@ -265,34 +265,34 @@ public class SelectQuartzArvhivesInfo {
             if (jstype_id == null) {
                 workType.insert();
             }
-            conn.commit();
-            conn.close();
+//            conn.commit();
+//            conn.close();
         }catch(Exception e3){
             log.error("插入项目下的人员信息出错： =============================================================>",e3);
             log.error(new Date());
             log.error(e3);
-            try {
-                if(conn != null) {
-                    conn.rollback();
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                if(conn != null) {
+//                    conn.rollback();
+//                    conn.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
         }
         finally {
-            conn = null;
+//            conn = null;
         }
     }
 
     private void importProjectWorkerHistory(ArchivesInfo info) {
-        Connection conn = null;
+//        Connection conn = null;
         try{
-            conn = info.dataSource().getConnection();
-            conn.setAutoCommit(false);
+//            conn = info.dataSource().getConnection();
+//            conn.setAutoCommit(false);
             //给历史记录表
             InvoLvedproject invoLvedproject = new InvoLvedproject();
-            invoLvedproject.setConnection(conn);
+//            invoLvedproject.setConnection(conn);
             invoLvedproject.setArchivesId(info.getUserid());
             invoLvedproject.setProjectId(info.getCwrPrjid());
             invoLvedproject.setUnitId(info.getCwrComid());
@@ -307,25 +307,25 @@ public class SelectQuartzArvhivesInfo {
                 invoLvedproject.where("[archives_id] = #{archives_id}").and("[project_id] = #{project_id}").update("[unit_id] = #{unit_id},[start_time] = #{start_time},[end_time] = #{end_time}," +
                         "[createOn] = #{createOn},[createBy] = #{createBy}");
             }
-            conn.commit();
-            conn.close();
+//            conn.commit();
+//            conn.close();
         }
 
         catch(Exception e) {
             log.error("插入项目下的人员信息出错： =============================================================>",e);
             log.error(new Date());
             log.error(e);
-            try {
-                if(conn!=null) {
-                    conn.rollback();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+//            try {
+//                if(conn!=null) {
+//                    conn.rollback();
+//                    conn.close();
+//                }
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
         }
         finally {
-            conn = null;
+//            conn = null;
         }
     }
 

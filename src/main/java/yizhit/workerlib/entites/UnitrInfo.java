@@ -7,7 +7,7 @@ import entity.query.annotation.Fieldname;
 import entity.query.annotation.Tablename;
 
 @Tablename("unit")
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 public class UnitrInfo extends Queryable<UnitrInfo> {
     @Fieldname("unit_id")
     private String  eafId;              //ID

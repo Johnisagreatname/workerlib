@@ -6,7 +6,7 @@ import entity.query.annotation.DataSource;
 /**
  * 历史记录表
  */
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 public class InvoLvedproject extends Queryable<InvoLvedproject> {
 
    private int id;                  //自增列id

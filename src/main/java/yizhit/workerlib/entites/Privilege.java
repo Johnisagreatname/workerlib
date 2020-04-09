@@ -6,7 +6,7 @@ import entity.query.annotation.DataSource;
 import java.io.Serializable;
 import java.util.UUID;
 
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 public class Privilege extends Queryable<Privilege> implements Serializable {
     private String privilegeId;     //权限表ID
     private String groupId;         //分组表id

@@ -5,7 +5,7 @@ import entity.query.annotation.DataSource;
 
 import java.io.Serializable;
 
-@DataSource(value = "workerlib2")
+@DataSource(value = "workerlib2", rxjava2 = false)
 public class ProjectWorkType extends Queryable<ProjectWorkType> implements Serializable {
     private String eafId;       //用户id
     private String projectId;   //项目id
