@@ -267,8 +267,8 @@ websocket:
 qrcode:
   width: 80
   height: 80
-  server: http://39.108.103.150:8000/#
+  server: http://219.133.197.148:8000/#
 
-enableTasks: false
+enableTasks: true
 
 

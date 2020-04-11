@@ -20,8 +20,8 @@
         <!-- ProjectInfoDetail -->
         <property name="jobDetail" ref="springQtzProjectInfofMethod"></property>
 
-        <!-- cron表达式，执行时间  每5分钟执行一次 -->
-        <property name="cronExpression" value="0 *20 * * * ?"></property>
+        <!-- cron表达式，执行时间  每天凌晨1点执行 -->
+        <property name="cronExpression" value="0 0 1 * * ?"></property>
     </bean>
 
 
@@ -41,8 +41,9 @@
         <!-- ProjectInfofDetail -->
         <property name="jobDetail" ref="springQtzAllUserInfoMethod"></property>
 
-        <!-- cron表达式，执行时间  每6分钟执行一次 -->
-        <property name="cronExpression" value="0 0,30 0/1 * * ? "></property>
+        <!-- cron表达式，执行时间  每天凌晨2点执行 -->
+<!--        <property name="cronExpression" value="0 0 2 * * ?"></property>-->
+        <property name="cronExpression" value="*/5 * * * * ?"></property>
     </bean>
 
 
@@ -104,11 +105,10 @@
         <!-- ArvhivesInfoDetail -->
         <property name="jobDetail" ref="springQtzmyArvhivesInfoMethod"></property>
 
-        <!-- cron表达式，执行时间  每1小时执行一次 -->
-        <property name="cronExpression" value="0 */40 * * * ?"></property>
+        <!-- cron表达式，执行时间  每天凌晨3点执行一次 -->
+<!--        <property name="cronExpression" value="0 0 3 * * ?"></property>-->
+        <property name="cronExpression" value="*/5 * * * * ?"></property>
     </bean>
-
-
 
     <!-- 配置myArvhivesInfoPhoto类 -->
     <bean id="myArvhivesInfoPhoto" class="yizhit.workerlib.timer.SelectQuartzArvhivesInfo"></bean>
@@ -126,8 +126,8 @@
         <!-- ArvhivesInfoPhotoDetail -->
         <property name="jobDetail" ref="springQtzmyArvhivesInfoPhotoMethod"></property>
 
-        <!-- cron表达式，执行时间  每10分钟执行一次 -->
-        <property name="cronExpression" value="0 */42 * * * ?"></property>
+        <!-- cron表达式，执行时间  每天凌晨4点 -->
+        <property name="cronExpression" value="0 0 4 * * ?"></property>
     </bean>
 
 
@@ -147,8 +147,8 @@
         <!-- ArvhivesInfoPhotoDetail -->
         <property name="jobDetail" ref="springQtzmyCheckWorkceInfoMethod"></property>
 
-        <!-- cron表达式，执行时间  每10分钟执行一次 -->
-        <property name="cronExpression" value="0 */2 * * * ?"></property>
+        <!-- cron表达式，执行时间  每天凌晨5点执行一次 -->
+        <property name="cronExpression" value="0 0 5 * * ?"></property>
     </bean>
 
 
@@ -159,10 +159,10 @@
         <property name="triggers">
             <list>
                 <!--此处指的是上面定时的方法-->
-                <ref bean="ProjectInfoTrigger1"></ref>
+                <!--<ref bean="ProjectInfoTrigger1"></ref>-->
                 <ref bean="AllUserTrigger2"></ref>
                 <ref bean="ArvhivesTrigger3"></ref>
-                <ref bean="ArvhivesPhotoTrigger4"></ref>
+                <!--<ref bean="ArvhivesPhotoTrigger4"></ref>-->
                 <!--<ref bean="CheckWorkceTrigger5"></ref>-->
             </list>
         </property>

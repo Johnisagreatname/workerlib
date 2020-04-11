@@ -1,65 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package yizhit.workerlib.excel.util;
 
 import ccait.ccweb.model.UserModel;
@@ -89,7 +28,6 @@ public class ExceclListener extends AnalysisEventListener<coursewareData> {
         this.height = height;
         this.server = server;
     }
-//    private List<excelData> datas = new ArrayList<excelData>();
     private List<coursewareData> datas = new ArrayList<coursewareData>();
     @Override
     public void invoke(coursewareData o, AnalysisContext analysisContext) {
@@ -99,16 +37,12 @@ public class ExceclListener extends AnalysisEventListener<coursewareData> {
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
         dictionaries dict = new dictionaries();
         courseware cour = new courseware();
         cultivate cul = new cultivate();
         cultivate upCul = new cultivate();
-        cultivate_archives culArc = new cultivate_archives();
 
         Integer value = 0;
-        int coursewareId = 0;
-        int cultivateId = 0;
         int courId = 0;
 
         for(int i=1;i<datas.size();i++){
