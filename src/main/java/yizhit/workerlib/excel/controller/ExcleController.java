@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import yizhit.workerlib.excel.pojo.coursewareData;
+import yizhit.workerlib.excel.pojo.dictionariesData;
 import yizhit.workerlib.excel.pojo.excelData;
 import yizhit.workerlib.excel.util.ExceclListener;
 import yizhit.workerlib.excel.util.ExceclUserListener;
@@ -73,7 +74,7 @@ public class ExcleController extends BaseController {
         UploadFileInfo uploadFileInfo = (UploadFileInfo) file.get("file");
         byte[] bytes = UploadUtils.getBytes(uploadFileInfo.getBuffer());
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        EasyExcel.read(inputStream, excelData.class, new ExceclWorkTypeListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
+        EasyExcel.read(inputStream, dictionariesData.class, new ExceclWorkTypeListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
 
     }
 }

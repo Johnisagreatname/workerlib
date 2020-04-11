@@ -183,7 +183,7 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
 //                }
 
             }
-        } catch (SQLException | NoSuchAlgorithmException | IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

@@ -52,8 +52,9 @@ public class ExceclWorkTypeListener extends AnalysisEventListener<dictionariesDa
             dict.setCategory("工种");
             dictionaries dictInfo = dict.where("[name]=#{name}").and("[category] = #{category}").first();
             if(dictInfo == null){
-               value =  dict.where("[category] = #{category}").select("max(value) as value").first(Integer.class);
-
+               if(dict.where("[category] = #{category}").and("[value] is not null").exist()) {
+                   value = dict.where("[category] = #{category}").select("max(value) as value").first(Integer.class);
+               }
                dict.setValue(value+1);
                dict.setColor("#41ccd3");
                dict.setIsShow(2);
