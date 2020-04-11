@@ -25,7 +25,7 @@ public class AllUserInfo extends Queryable<AllUserInfo> implements Serializable 
 
     private String cwrIdnum;        //身份证号码
 
-    private int createBy;
+    private Integer createBy;
 
     @Fieldname("id_card_front")
     private String cwrIdphotoScan;  //身份证扫描件
@@ -42,52 +42,71 @@ public class AllUserInfo extends Queryable<AllUserInfo> implements Serializable 
 
     private String eafModifier;     //更新人
 
-    private int year;            //年
+    private Integer year;            //年
 
-    private int month;           //月
+    private Integer month;           //月
 
-    private int Sex;             //性别
+    private Integer Sex;             //性别
 
     private String cwrStatus;
 
     private String eafStatus;
 
     @Fieldname("qr_code")
-    private String qr_code;
+    private String qrCode;
 
     @Exclude
     private Integer userid;
+    @Exclude
+    private Boolean status;
 
-    public int getYear() {
+
+    public Integer getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Integer createBy) {
+        this.createBy = createBy;
+    }
+
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
-    public int getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(int month) {
+    public void setMonth(Integer month) {
         this.month = month;
     }
 
-    public int getSex() {
+    public Integer getSex() {
         return Sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(Integer sex) {
         Sex = sex;
     }
 
     public String getQrCode() {
-        return qr_code;
+        return qrCode;
     }
 
-    public void setQrCode(String qr_code) {
-        this.qr_code = qr_code;
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public String getEafId() {
@@ -210,13 +229,7 @@ public class AllUserInfo extends Queryable<AllUserInfo> implements Serializable 
         this.userid = userid;
     }
 
-    public int getCreateBy() {
-        return createBy;
-    }
 
-    public void setCreateBy(int createBy) {
-        this.createBy = createBy;
-    }
 
 
 //    private String cwrCertifiDate;

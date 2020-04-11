@@ -2,6 +2,7 @@ package yizhit.workerlib.entites;
 
 import entity.query.Queryable;
 import entity.query.annotation.DataSource;
+import entity.query.annotation.Exclude;
 import entity.query.annotation.Fieldname;
 import entity.query.annotation.Tablename;
 
@@ -10,8 +11,8 @@ import entity.query.annotation.Tablename;
  */
 @Tablename("archives")
 @DataSource(value = "workerlib2", rxjava2 = false)
-public class ArchivesInfo  extends Queryable<ArchivesInfo> {
-    private  int id;
+public class ArchivesInfo extends Queryable<ArchivesInfo> {
+    private int id;
 
     @Fieldname("eafId")
     private String eafId;
@@ -46,14 +47,12 @@ public class ArchivesInfo  extends Queryable<ArchivesInfo> {
     @Fieldname("createOn")
     private String eafCreatetime;   //创建时间
 
-    @Fieldname("modifyBy")
+    @Exclude
     private String eafModifier;     //更新人
 
     @Fieldname("modifyOn")
     private String eafModifytime;   //更新时间
 
-    @Fieldname("createBy")
-    private String eafCreator;      //创建人
 
     private String eafRLeftid;
 
@@ -142,13 +141,21 @@ public class ArchivesInfo  extends Queryable<ArchivesInfo> {
         this.cwrIdnum = cwrIdnum;
     }
 
-    public String getCwrWorkClass() { return CwrWorkClass; }
+    public String getCwrWorkClass() {
+        return CwrWorkClass;
+    }
 
-    public void setCwrWorkClass(String cwrWorkClass) { CwrWorkClass = cwrWorkClass; }
+    public void setCwrWorkClass(String cwrWorkClass) {
+        CwrWorkClass = cwrWorkClass;
+    }
 
-    public String getCwrWorkName() { return CwrWorkName; }
+    public String getCwrWorkName() {
+        return CwrWorkName;
+    }
 
-    public void setCwrWorkName(String cwrWorkName) { CwrWorkName = cwrWorkName; }
+    public void setCwrWorkName(String cwrWorkName) {
+        CwrWorkName = cwrWorkName;
+    }
 
     public String getEafCreatetime() {
         return eafCreatetime;
@@ -174,13 +181,7 @@ public class ArchivesInfo  extends Queryable<ArchivesInfo> {
         this.eafModifytime = eafModifytime;
     }
 
-    public String getEafCreator() {
-        return eafCreator;
-    }
 
-    public void setEafCreator(String eafCreator) {
-        this.eafCreator = eafCreator;
-    }
 
     public String getEafRLeftid() {
         return eafRLeftid;
@@ -249,8 +250,6 @@ public class ArchivesInfo  extends Queryable<ArchivesInfo> {
 //    private String cwrUserType;
 //    private String cwrIskeyps;
 //    private String cwrIsLeader;
-
-
 
 
 }

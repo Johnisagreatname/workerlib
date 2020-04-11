@@ -86,6 +86,11 @@ public class AllUserTrigger {
 
             String Idnum = (String) item.get("cwrIdnum");
             userModel.setUsername(Idnum);
+            UserModel user = userModel.where("[username]=#{username}").first();
+            if(user != null){
+                item.put("status",false);
+                return FastJsonUtils.convert(item, AllUserInfo.class);
+            }
             if (Idnum.length() < 6) {
                 userModel.setPassword(EncryptionUtil.md5("123456", md5PublicKey, encoding));
             } else {
@@ -99,9 +104,11 @@ public class AllUserTrigger {
             }
 
             userModel.setCreateOn(new Date());
-            userModel.setPath(item.get("userPath").toString());
+
             if(item.get("userPath") != null) {
                 userModel.setPath((String)item.get("userPath"));
+            }else {
+                userModel.setPath("0/1");
             }
             Integer userid = userModel.getId()==null ? 0 : userModel.getId().intValue();
 
@@ -112,7 +119,12 @@ public class AllUserTrigger {
             String userGroupRoleId = UUID.randomUUID().toString().replace("-", "");
             userGroupRoleModel.setUserGroupRoleId(userGroupRoleId);
             userGroupRoleModel.setRoleId(UUID.fromString("703d28f4-a813-4a9b-87fb-971d0e31f9e5"));
-            userGroupRoleModel.setPath((String)item.get("userPath"));
+            if(item.get("userPath") != null) {
+                userGroupRoleModel.setPath((String)item.get("userPath"));
+            }else {
+                userGroupRoleModel.setPath("0/1");
+            }
+
             userGroupRoleModel.setCreateOn(new Date());
             userGroupRoleModel.setCreateBy((Integer) item.get("createBy"));
             userGroupRoleModel.setUserId(userid);
@@ -133,7 +145,7 @@ public class AllUserTrigger {
                 String filename = js.getUsername() + ".png";
                 byte[] binary = QRCodeUtil.creatRrCode(url,width,height);
                 String path = UploadUtils.upload(qrCodePath + "/workerlib/people/code" ,filename,binary);
-                item.put("qr_code", path);
+                item.put("qrCode", path);
             }
         }
 

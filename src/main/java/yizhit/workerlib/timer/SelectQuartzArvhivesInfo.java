@@ -132,10 +132,8 @@ public class SelectQuartzArvhivesInfo {
     }
 
     private void importArchives(ArchivesInfo info, SelectQuartzUnitrInfo selectQuartzUnitrInfo) {
-//        Connection conn = null;
+
         try{
-//            conn = info.dataSource().getConnection();
-//            conn.setAutoCommit(false);
             if(info.getEafName() != null && !Pattern.compile("[0-9]*").matcher(info.getEafName()).matches()){
                 info.setLeave(2);
                 if("进行中".equals(info.getCwrUserStatus())) {
@@ -145,7 +143,6 @@ public class SelectQuartzArvhivesInfo {
                     selectQuartzUnitrInfo.batchInsertUnitrInfo(info.getCwrComid());
                 }
                 ArchivesInfo archivesInfo = new ArchivesInfo();
-//                archivesInfo.setConnection(conn);
                 archivesInfo.setUserid(info.getUserid());
                 archivesInfo.setCwrPrjid(info.getCwrPrjid());
                 archivesInfo.setEafId(info.getEafId());
@@ -158,8 +155,7 @@ public class SelectQuartzArvhivesInfo {
                 archivesInfo.setCwrWorkClass(info.getCwrWorkClass());
                 archivesInfo.setCwrWorkName(info.getCwrWorkName());
                 archivesInfo.setEafCreatetime(info.getEafCreatetime());
-                archivesInfo.setEafModifier(info.getEafModifier());
-                archivesInfo.setEafCreator(info.getEafCreator());
+//                archivesInfo.setCreateBy(0);
                 archivesInfo.setEafRLeftid(info.getEafRLeftid());
                 archivesInfo.setLeave(info.getLeave());
                 archivesInfo.setCwrWorkclassId(info.getCwrWorkclassId());
@@ -168,9 +164,7 @@ public class SelectQuartzArvhivesInfo {
                 archivesInfo.setCwrUserOut(info.getCwrUserOut());
                 ArchivesInfo js = archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").first();
 
-//                js.setConnection(conn);
                 UserModel account = new UserModel();
-//                account.setConnection(conn);
                 account.setUsername(info.getCwrIdnum());
                 account = account.where("username=#{username}").first();
                 if(account != null) {
@@ -178,6 +172,7 @@ public class SelectQuartzArvhivesInfo {
                 }
 
                 if (js == null ){
+                    info.setCreateBy(account.getId());
                     Integer i = info.insert();
                 }else if ("结束".equals(info.getCwrUserStatus())){
                     archivesInfo.setLeave(2);
@@ -197,36 +192,20 @@ public class SelectQuartzArvhivesInfo {
                             "[createBy]=#{createBy},[eafRLeftid]=#{eafRLeftid},[cwrWorkclassId]=#{cwrWorkclassId}," +
                             "[cwrWorktype]=#{cwrWorktype},[cwrUserIn]=#{cwrUserIn}");
                 }
-//                conn.commit();
-//                conn.close();
             }
         }catch (Exception e5){
             log.error("插入项目下的人员信息出错： =============================================================>",e5);
             log.error(new Date());
             log.error(e5);
-//            try{
-//                if(conn != null) {
-//                    conn.rollback();
-//                    conn.close();
-//                }
-//            }
-//            catch (Exception e) {
-//                log.error(e.getMessage(), e);
-//            }
         }
         finally {
-//            conn = null;
         }
     }
 
     private void importProjectWorkerType(ArchivesInfo info) {
-//        Connection conn = null;
         try{
-//            conn = info.dataSource().getConnection();
-//            conn.setAutoCommit(false);
             //给所有人员表插入单位ID
             AllUserInfoUpdate allUserInfoUpdate = new AllUserInfoUpdate();
-//            allUserInfoUpdate.setConnection(conn);
             allUserInfoUpdate.setCwrIdnum(info.getCwrIdnum());
             allUserInfoUpdate.setUnitId(info.getCwrComid());
             allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").update("[unit_id]=#{unitId}");
@@ -241,7 +220,6 @@ public class SelectQuartzArvhivesInfo {
 
             //给所有工种表导入工种信息
             ProjectWorkType projectWorkType = new ProjectWorkType();
-//            projectWorkType.setConnection(conn);
             projectWorkType.setEafId(info.getUserid());
             projectWorkType.setProjectId(info.getCwrPrjid());
             projectWorkType.setWorkType(info.getCwrWorkName());
@@ -256,7 +234,6 @@ public class SelectQuartzArvhivesInfo {
 
             //给工种表导入工种信息
             WorkType workType = new WorkType();
-//            workType.setConnection(conn);
             workType.setEafId(allUserInfoUpdate.getEafId());
             workType.setWorkType(info.getCwrWorkName());
             workType.setCreateBy("1");
@@ -265,34 +242,19 @@ public class SelectQuartzArvhivesInfo {
             if (jstype_id == null) {
                 workType.insert();
             }
-//            conn.commit();
-//            conn.close();
         }catch(Exception e3){
             log.error("插入项目下的人员信息出错： =============================================================>",e3);
             log.error(new Date());
             log.error(e3);
-//            try {
-//                if(conn != null) {
-//                    conn.rollback();
-//                    conn.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
         }
         finally {
-//            conn = null;
         }
     }
 
     private void importProjectWorkerHistory(ArchivesInfo info) {
-//        Connection conn = null;
         try{
-//            conn = info.dataSource().getConnection();
-//            conn.setAutoCommit(false);
             //给历史记录表
             InvoLvedproject invoLvedproject = new InvoLvedproject();
-//            invoLvedproject.setConnection(conn);
             invoLvedproject.setArchivesId(info.getUserid());
             invoLvedproject.setProjectId(info.getCwrPrjid());
             invoLvedproject.setUnitId(info.getCwrComid());
@@ -307,25 +269,14 @@ public class SelectQuartzArvhivesInfo {
                 invoLvedproject.where("[archives_id] = #{archives_id}").and("[project_id] = #{project_id}").update("[unit_id] = #{unit_id},[start_time] = #{start_time},[end_time] = #{end_time}," +
                         "[createOn] = #{createOn},[createBy] = #{createBy}");
             }
-//            conn.commit();
-//            conn.close();
         }
 
         catch(Exception e) {
             log.error("插入项目下的人员信息出错： =============================================================>",e);
             log.error(new Date());
             log.error(e);
-//            try {
-//                if(conn!=null) {
-//                    conn.rollback();
-//                    conn.close();
-//                }
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
         }
         finally {
-//            conn = null;
         }
     }
 

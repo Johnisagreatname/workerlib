@@ -32,10 +32,11 @@ public class alluser extends Queryable<alluser> {
     @ExcelIgnore
     private Double month;
     @ExcelIgnore
-    private Double Sex;
+    private int Sex;
     @Fieldname("qr_code")
     private String  qrCode;
-    private int createBy;
+    private Integer createBy;
+    private String userPath;
 
     public String getEafName() {
         return eafName;
@@ -110,11 +111,11 @@ public class alluser extends Queryable<alluser> {
         this.month = month;
     }
 
-    public Double getSex() {
+    public int getSex() {
         return Sex;
     }
 
-    public void setSex(Double sex) {
+    public void setSex(int sex) {
         Sex = sex;
     }
 
@@ -142,11 +143,19 @@ public class alluser extends Queryable<alluser> {
         this.eafUserStatus = eafUserStatus;
     }
 
-    public int getCreateBy() {
+    public Integer getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(int createBy) {
+    public void setCreateBy(Integer createBy) {
         this.createBy = createBy;
+    }
+
+    public String getUserPath() {
+        return userPath;
+    }
+
+    public void setUserPath(String userPath) {
+        this.userPath = userPath;
     }
 }

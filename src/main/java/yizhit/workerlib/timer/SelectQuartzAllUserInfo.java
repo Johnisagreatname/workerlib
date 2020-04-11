@@ -237,7 +237,9 @@ public class SelectQuartzAllUserInfo {
                     allUserInfoByUpdate.setEafStatus(info.getEafStatus());
                     allUserInfoByUpdate.setQrCode(info.getQrCode());
                     allUserInfoByUpdate.setCreateBy(info.getUserid());
-                    if(StringUtils.isNotEmpty(info.getCwrIdnum())) {
+                    if(StringUtils.isNotEmpty(info.getCwrIdnum()) && info.getCwrIdnum().length()==18) {
+                        System.out.println(info.getCwrIdnum());
+
                         allUserInfoByUpdate.setYear(Integer.parseInt(info.getCwrIdnum().substring(6, 10)));
                         allUserInfoByUpdate.setMonth(Integer.parseInt(info.getCwrIdnum().substring(10,12)));
                         info.setYear(allUserInfoByUpdate.getYear());
