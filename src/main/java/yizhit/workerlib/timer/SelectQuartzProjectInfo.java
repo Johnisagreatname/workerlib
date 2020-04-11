@@ -82,7 +82,6 @@ public class SelectQuartzProjectInfo {
                     pageIndex++;
                 }
                 for(ProjectInfo item : list) {
-
                     ProjectInfo js = null;
                     ProjectInfo projectInfo = null;
                     try {
@@ -143,10 +142,19 @@ public class SelectQuartzProjectInfo {
                             projectInfo.setCwrJsUnit(item.getCwrJsUnit());
                             projectInfo.setCwrSgUnit(item.getCwrSgUnit());
                             projectInfo.setCwrControlUnit(item.getCwrControlUnit());
-                            projectInfo.where("[project_id]=#{eafId}").update("[modifyOn]=#{eafModifytime},[createOn]=#{eafCreatetime},[project_address]=#{cwrPrjAddr}," +
-                                    "[project_name]=#{cwrPrjName},[project_brief]=#{cwrPrjJian},[status]=#{cwrPrjStatus}," +
-                                    "[cwrPrjType]=#{cwrPrjType},[cwrPrjCode]=#{cwrPrjCode},[end_time]=#{cwrEndDate}," +
-                                    "[start_time]=#{cwrStartDate},[construction]=#{cwrJsUnit},[organization]=#{cwrSgUnit}," +
+                            projectInfo.where("[project_id]=#{eafId}").update("" +
+                                    "[modifyOn]=#{eafModifytime}," +
+                                    "[createOn]=#{eafCreatetime}," +
+                                    "[project_address]=#{cwrPrjAddr}," +
+                                    "[project_name]=#{cwrPrjName}," +
+                                    "[project_brief]=#{cwrPrjJian}," +
+                                    "[status]=#{cwrPrjStatus}," +
+                                    "[cwrPrjType]=#{cwrPrjType}," +
+                                    "[cwrPrjCode]=#{cwrPrjCode}," +
+                                    "[end_time]=#{cwrEndDate}," +
+                                    "[start_time]=#{cwrStartDate}," +
+                                    "[construction]=#{cwrJsUnit}," +
+                                    "[organization]=#{cwrSgUnit}," +
                                     "[supervising]=#{cwrControlUnit}");
                             group.where("[groupName]=#{groupName}").update("[groupName]=#{groupName}");
                         }

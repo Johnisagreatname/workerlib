@@ -10,7 +10,7 @@ public class usergrouprole extends Queryable<Object> {
     private String groupId;
     private String userPath;
     private Date createOn;
-    private int createBy;
+    private Integer createBy;
 
     public String getUserGroupRoleId() {
         return userGroupRoleId;
@@ -52,11 +52,11 @@ public class usergrouprole extends Queryable<Object> {
         this.createOn = createOn;
     }
 
-    public int getCreateBy() {
+    public Integer getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(int createBy) {
+    public void setCreateBy(Integer createBy) {
         this.createBy = createBy;
     }
 }

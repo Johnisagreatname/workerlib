@@ -269,6 +269,6 @@ qrcode:
   height: 80
   server: http://39.108.103.150:8000/#
 
-enableTasks: false
+enableTasks: true
 
 

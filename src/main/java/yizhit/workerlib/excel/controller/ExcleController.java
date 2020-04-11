@@ -1,18 +1,10 @@
 
-
-
-
-
-
-
-
-
-
-
 package yizhit.workerlib.excel.controller;
 
 import ccait.ccweb.annotation.AccessCtrl;
 import ccait.ccweb.controllers.BaseController;
+import ccait.ccweb.model.UploadFileInfo;
+import ccait.ccweb.model.UserModel;
 import ccait.ccweb.utils.ImageUtils;
 import ccait.ccweb.utils.UploadUtils;
 import com.alibaba.excel.EasyExcel;
@@ -24,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import yizhit.workerlib.excel.pojo.coursewareData;
 import yizhit.workerlib.excel.pojo.excelData;
 import yizhit.workerlib.excel.util.ExceclListener;
+import yizhit.workerlib.excel.util.ExceclUserListener;
+import yizhit.workerlib.excel.util.ExceclWorkTypeListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
@@ -57,7 +51,7 @@ public class ExcleController extends BaseController {
         }
         byte[] bytes = ImageUtils.getBytesForBase64(file.get("file").toString());
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        EasyExcel.read(inputStream, coursewareData.class, new ExceclListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
+        EasyExcel.read(inputStream, coursewareData.class, new ExceclListener(md5PublicKey,encoding, null,aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
 
     }
     @PostMapping("/user")
@@ -65,9 +59,21 @@ public class ExcleController extends BaseController {
         if(file.get("file") == null) {
             return;
         }
-        byte[] bytes = ImageUtils.getBytesForBase64(file.get("file").toString());
+        UploadFileInfo uploadFileInfo = (UploadFileInfo) file.get("file");
+        byte[] bytes = UploadUtils.getBytes(uploadFileInfo.getBuffer());
         InputStream inputStream = new ByteArrayInputStream(bytes);
-        EasyExcel.read(inputStream, excelData.class, new ExceclListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
+        EasyExcel.read(inputStream, excelData.class, new ExceclUserListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
+
+    }
+    @PostMapping("/workType")
+    public void importWorkTypeExcel(@RequestBody Map<String, Object> file) throws IOException {
+        if(file.get("file") == null) {
+            return;
+        }
+        UploadFileInfo uploadFileInfo = (UploadFileInfo) file.get("file");
+        byte[] bytes = UploadUtils.getBytes(uploadFileInfo.getBuffer());
+        InputStream inputStream = new ByteArrayInputStream(bytes);
+        EasyExcel.read(inputStream, excelData.class, new ExceclWorkTypeListener(md5PublicKey,encoding,this.getLoginUser(),aesPublicKey,qrCodePath,width,height,server)).sheet().doRead();
 
     }
 }
