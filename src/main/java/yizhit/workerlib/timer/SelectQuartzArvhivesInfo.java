@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static java.lang.Thread.sleep;
+
 
 @DisallowConcurrentExecution
 public class SelectQuartzArvhivesInfo {
@@ -91,10 +93,12 @@ public class SelectQuartzArvhivesInfo {
                     params.put("sign", s);
                     params.put("data", jsonObject.toJSONString());
                     String str = params.toJSONString();
-                    log.info("params:  " + str);
+
                     HashMap<String, String> header = new HashMap<String, String>();
                     header.put("Content-Type", "application/json");
+                    log.info("入参params=" + str);
                     String result = RequestUtils.post(FinalUtil.url, str, header);
+                    log.info("返回参数result="+ result);
                     JSONObject json = JSONObject.parseObject(result);
 
                     List<ArchivesInfo> archivesInfoList = new ArrayList<ArchivesInfo>();
@@ -172,8 +176,12 @@ public class SelectQuartzArvhivesInfo {
                 }
 
                 if (js == null ){
-                    info.setCreateBy(account.getId());
-                    Integer i = info.insert();
+                    log.info("account=", account);
+                    if(account != null){
+                        info.setCreateBy(account.getId());
+                        Integer i = info.insert();
+                    }
+
                 }else if ("结束".equals(info.getCwrUserStatus())){
                     archivesInfo.setLeave(2);
                     archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").update("[cwrUserStatus]=#{cwrUserStatus},[eafId]=#{eafId},[unit_id]=#{cwrComid}," +
@@ -208,8 +216,11 @@ public class SelectQuartzArvhivesInfo {
             AllUserInfoUpdate allUserInfoUpdate = new AllUserInfoUpdate();
             allUserInfoUpdate.setCwrIdnum(info.getCwrIdnum());
             allUserInfoUpdate.setUnitId(info.getCwrComid());
-            allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").update("[unit_id]=#{unitId}");
-            allUserInfoUpdate = allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").first();
+            if(StringUtils.isNotEmpty(info.getCwrIdnum()) && StringUtils.isNotEmpty(info.getCwrComid())){
+                allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").update("[unit_id]=#{unitId}");
+                allUserInfoUpdate = allUserInfoUpdate.where("[cwrIdnum]=#{cwrIdnum}").first();
+            }
+
             if(allUserInfoUpdate == null) {
                 return;
             }
