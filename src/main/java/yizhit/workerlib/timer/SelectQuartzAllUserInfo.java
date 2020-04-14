@@ -58,7 +58,7 @@ public class SelectQuartzAllUserInfo {
         // 数据库数据
         System.out.println("查询项目下人员工作正在进入处理...");
         JSONObject params = new JSONObject();
-        JSONArray array = null;
+        JSONArray array;
         int pageIndex = 0;
         AllUserInfo js = null;
         try {
@@ -103,7 +103,7 @@ public class SelectQuartzAllUserInfo {
             timerProfile.setKey("alluser");
             List<TimerProfile> profiles = timerProfile.where("[key]=#{key}").query();
 
-            List<AllUserInfo> allUserInfoListByInsert = new ArrayList<AllUserInfo>() ;
+            List<AllUserInfo> allUserInfoListByInsert = new ArrayList<>() ;
 
             for (ProjectInfo projectInfoitem:projectInfoList) {
                 timerProfile.setPid(projectInfoitem.getEafId());
@@ -117,7 +117,7 @@ public class SelectQuartzAllUserInfo {
                     pageIndex = currentTimerProfile.getValue();
                 }else{
                     timerProfile.setValue(1);
-                    Integer i = timerProfile.insert();
+                    timerProfile.insert();
                     pageIndex = 1;
                 }
 
@@ -128,11 +128,11 @@ public class SelectQuartzAllUserInfo {
                 String formatDate = Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss");
                 sb.append("appid=appid1").append("&data="+jsonObject.toJSONString()).append("&format=json").append("&method=user.info").append("&nonce=123456").append("&timestamp="+formatDate).append("&version=1.0").append("&appsecret=123456");
                 String hex = sb.toString().toLowerCase();
-                System.out.println(hex);
-                String s = SHA256.getSHA256StrJava(hex);
-                System.out.println("cd:"+s);
-                System.out.println(formatDate);
-                System.out.println(projectInfoitem.getEafId());
+                log.info(hex);
+                String sign = SHA256.getSHA256StrJava(hex);
+                log.info("sign="+sign);
+                log.info(formatDate);
+                log.info(projectInfoitem.getEafId());
                 //发送请求
                 params.put("method","user.info");
                 params.put("format","json");
@@ -140,21 +140,20 @@ public class SelectQuartzAllUserInfo {
                 params.put("appid","appid1");
                 params.put("timestamp",formatDate);
                 params.put("nonce","123456");
-                params.put("sign",s);
+                params.put("sign",sign);
                 params.put("data",jsonObject.toJSONString());
-                String str = params.toJSONString();
-                log.info("params:  " + str);
-                HashMap<String, String> header = new HashMap<String, String>();
+                String paramsToStr = params.toJSONString();
+                log.info("params:  " + paramsToStr);
+                HashMap<String, String> header = new HashMap<>();
                 header.put("Content-Type", "application/json");
-                String result = RequestUtils.post(FinalUtil.url, str, header );
+                String result = RequestUtils.post(FinalUtil.url, paramsToStr, header );
                 JSONObject json = JSONObject.parseObject(result);
 
-                List<AllUserInfo> allUserInfoList = new ArrayList<AllUserInfo>() ;
                 // 数据获取正确
                 if(json.containsKey("code") && json.get("code").equals("0")){
                     array = json.getJSONObject("data").getJSONArray("list");
                     String text = array.toJSONString();
-                    allUserInfoList =  FastJsonUtils.toList(text, AllUserInfo.class);
+                    List<AllUserInfo> allUserInfoList =  FastJsonUtils.toList(text, AllUserInfo.class);
                     if (allUserInfoList.size() == 500){
                         pageIndex++;
                     }
@@ -163,7 +162,7 @@ public class SelectQuartzAllUserInfo {
                     }
 
                 }else {
-                    log.error("获取所有工程id失败=============================================================》  " + result);
+                    log.error("获取所有工程id失败==========》  " + result);
                 }
             }
 
@@ -211,11 +210,8 @@ public class SelectQuartzAllUserInfo {
                             .and("[roleId]=#{roleId}").exist()) {
                         userGroupRoleModel.insert();
                     }
-                }
-                catch (Exception ex) {
-                    log.error("fail to set user/group/role: =============================================================>");
-                    log.error("插入所有人员信息出错： =============================================================>",ex);
-                    log.error(new Date());
+                } catch (Exception e) {
+                    log.error("插入所有人员信息出错： ==========>",e);
                 }
 
                 AllUserInfo allUserInfoByUpdate = null;
@@ -238,14 +234,14 @@ public class SelectQuartzAllUserInfo {
                     allUserInfoByUpdate.setQrCode(info.getQrCode());
                     allUserInfoByUpdate.setCreateBy(info.getUserid());
                     if(StringUtils.isNotEmpty(info.getCwrIdnum()) && info.getCwrIdnum().length()==18) {
-                        System.out.println(info.getCwrIdnum());
+                        log.info("身份证号码="+info.getCwrIdnum());
 
                         allUserInfoByUpdate.setYear(Integer.parseInt(info.getCwrIdnum().substring(6, 10)));
                         allUserInfoByUpdate.setMonth(Integer.parseInt(info.getCwrIdnum().substring(10,12)));
                         info.setYear(allUserInfoByUpdate.getYear());
                         info.setMonth(allUserInfoByUpdate.getMonth());
-                        int Sex = Integer.parseInt(info.getCwrIdnum().substring(16,17));
-                        if (Sex % 2 == 0){
+                        int sex = Integer.parseInt(info.getCwrIdnum().substring(16,17));
+                        if (sex % 2 == 0){
                             allUserInfoByUpdate.setSex(2);
                             info.setSex(2);
                         }else {
@@ -254,9 +250,8 @@ public class SelectQuartzAllUserInfo {
                         }
                     }
 
-                    Integer id = null;
                     if (js == null){
-                        id = info.insert();
+                        info.insert();
                     }else {
                         allUserInfoByUpdate.where("[eafId]=#{eafId}").update("[eafName]=#{eafName},[eafPhone]=#{eafPhone},[cwrIdnumType]=#{cwrIdnumType}," +
                                 "[cwrIdnum]=#{cwrIdnum},[id_card_front]=#{cwrIdphotoScan},[cwrPhoto]=#{cwrPhoto}," +
@@ -264,24 +259,22 @@ public class SelectQuartzAllUserInfo {
                                 "[eafCreator]=#{eafCreator},[eafModifier]=#{eafModifier},[cwrStatus]=#{cwrStatus}," +
                                 "[eafStatus]=#{eafStatus}, [createBy]=#{createBy}");
                     }
-                }catch (Exception ee){
+                }catch (Exception e){
+                    log.error(e);
                     if (js == null) {
-                        log.error("项目下人员数据插入失败: =============================================================>");
+                        log.error("项目下人员数据插入失败: ========>");
                         log.error(FastJsonUtils.convertObjectToJSON(info));
                     }
                     else {
-                        log.error("项目下人员数据更新失败: ------------------------------------------------------------>");
+                        log.error("项目下人员数据更新失败: -------->");
                         log.error(FastJsonUtils.convertObjectToJSON(allUserInfoByUpdate));
                     }
-                    log.error("--------------------------------------------------------------------------------");
-                    log.error(ee);
                 }
                 Runtime.getRuntime().gc();
-                Thread.sleep(1000);
             }
             timerProfile.setValue(pageIndex);
             timerProfile.where("[key]=#{key}").and("[pid]=#{pid}").update("[value]=#{value}");
-            System.out.println("数据插入完成!");
+            log.info("数据插入完成!");
         } catch (Exception e) {
             log.error(e);
         }

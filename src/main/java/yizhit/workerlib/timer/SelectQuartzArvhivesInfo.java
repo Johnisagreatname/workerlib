@@ -38,27 +38,35 @@ public class SelectQuartzArvhivesInfo {
         }
 
         // 数据库数据
-        System.out.println("查询工程员工表工作正在进入处理...");
+        log.info("查询工程员工表工作正在进入处理...");
         SelectQuartzUnitrInfo selectQuartzUnitrInfo = new SelectQuartzUnitrInfo();
         JSONObject params = new JSONObject();
-        JSONArray array = null;
+        JSONArray array;
         int pageIndex = 0;
         try {
             //校验验码
             JSONObject jsonObject = new JSONObject();
             ProjectInfo projectInfo = new ProjectInfo();
-            //查询工程ID
+            //查询所有工程ID
             List<ProjectInfo> projectInfoList = projectInfo.where("1=1").select(" project_id ").query(ProjectInfo.class);
             //把当前表的分页用户全部查出来
             TimerProfile timerProfile = new TimerProfile();
             timerProfile.setKey("archives");
             List<TimerProfile> profiles = timerProfile.where("[key]=#{key}").query();
 
-            List<ArchivesInfo> arvhivesInfoListByInsert = new ArrayList<ArchivesInfo>() ;
+            List<ArchivesInfo> arvhivesInfoListByInsert = new ArrayList<>();
 
             for (ProjectInfo projectInfoitem:projectInfoList) {
                 try{
                     timerProfile.setPid(projectInfoitem.getEafId());
+//                    int j = 0;
+//                    for(TimerProfile ti : profiles){
+//                        if(ti.getPid().equals(projectInfoitem.getEafId())){
+//                            j++;
+//                            System.out.println("第"+j+"个对象");
+//                        }
+//                    }
+                    //可能会有2个对象
                     Optional<TimerProfile> optionals = profiles.stream().filter(a -> a.getPid().equals(projectInfoitem.getEafId())).findFirst();
                     TimerProfile currentTimerProfile = null;
                     if (optionals.isPresent()) {
@@ -80,8 +88,8 @@ public class SelectQuartzArvhivesInfo {
                     String formatDate = Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss");
                     sb.append("appid=appid1").append("&data=" + jsonObject.toJSONString()).append("&format=json").append("&method=com2user.info").append("&nonce=123456").append("&timestamp=" + formatDate).append("&version=1.0").append("&appsecret=123456");
                     String hex = sb.toString().toLowerCase();
-                    String s = SHA256.getSHA256StrJava(hex);
-                    log.info("cd:" + s);
+                    String sign = SHA256.getSHA256StrJava(hex);
+                    log.info("签名sign:" + sign);
                     log.info(formatDate);
                     //发送请求
                     params.put("method", "com2user.info");
@@ -90,23 +98,22 @@ public class SelectQuartzArvhivesInfo {
                     params.put("appid", "appid1");
                     params.put("timestamp", formatDate);
                     params.put("nonce", "123456");
-                    params.put("sign", s);
+                    params.put("sign", sign);
                     params.put("data", jsonObject.toJSONString());
                     String str = params.toJSONString();
 
-                    HashMap<String, String> header = new HashMap<String, String>();
+                    HashMap<String, String> header = new HashMap<>();
                     header.put("Content-Type", "application/json");
                     log.info("入参params=" + str);
                     String result = RequestUtils.post(FinalUtil.url, str, header);
                     log.info("返回参数result="+ result);
                     JSONObject json = JSONObject.parseObject(result);
 
-                    List<ArchivesInfo> archivesInfoList = new ArrayList<ArchivesInfo>();
                     // 数据获取正确
                     if (json.containsKey("code") && json.get("code").equals("0")) {
                         array = json.getJSONObject("data").getJSONArray("list");
                         String text = array.toJSONString();
-                        archivesInfoList = FastJsonUtils.toList(text, ArchivesInfo.class);
+                        List<ArchivesInfo> archivesInfoList = FastJsonUtils.toList(text, ArchivesInfo.class);
                         if (archivesInfoList.size() == 500) {
                             pageIndex++;
                         }
@@ -114,16 +121,19 @@ public class SelectQuartzArvhivesInfo {
                             arvhivesInfoListByInsert.add(info);
                         }
                     }else {
-                        System.out.println("error:  " + result);
+                        log.info("result=" + result);
                     }
                 }catch (Exception e1){
-                    log.error("获取所有工程id失败：========================================================》",e1);
+                    log.error("获取所有工程id失败：=========》",e1);
                 }
             }
 
             for(ArchivesInfo info:arvhivesInfoListByInsert){
+                //插入历史记录表信息
                 importProjectWorkerHistory(info);
+                //工种表导入工种信息
                 importProjectWorkerType(info);
+                //工程下的用户信息表
                 importArchives(info, selectQuartzUnitrInfo);
             }
 
@@ -135,6 +145,14 @@ public class SelectQuartzArvhivesInfo {
         }
     }
 
+    /**
+     * @Author xieya
+     * @Description  工程下的用户信息表
+     * @Date 2020/4/13 11:00
+     * @param info
+     * @param selectQuartzUnitrInfo
+     * @return void
+     **/
     private void importArchives(ArchivesInfo info, SelectQuartzUnitrInfo selectQuartzUnitrInfo) {
 
         try{
@@ -175,13 +193,10 @@ public class SelectQuartzArvhivesInfo {
                     archivesInfo.setCreateBy(account.getId());
                 }
 
-                if (js == null ){
-                    log.info("account=", account);
-                    if(account != null){
-                        info.setCreateBy(account.getId());
-                        Integer i = info.insert();
-                    }
-
+                if (js == null && account != null){
+                    log.info("account.getId()=", account.getId());
+                    info.setCreateBy(account.getId());
+                    info.insert();
                 }else if ("结束".equals(info.getCwrUserStatus())){
                     archivesInfo.setLeave(2);
                     archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").update("[cwrUserStatus]=#{cwrUserStatus},[eafId]=#{eafId},[unit_id]=#{cwrComid}," +
@@ -201,15 +216,18 @@ public class SelectQuartzArvhivesInfo {
                             "[cwrWorktype]=#{cwrWorktype},[cwrUserIn]=#{cwrUserIn}");
                 }
             }
-        }catch (Exception e5){
-            log.error("插入项目下的人员信息出错： =============================================================>",e5);
-            log.error(new Date());
-            log.error(e5);
-        }
-        finally {
+        }catch (Exception e){
+            log.error("插入工程下的用户信息出错： ======>",e);
         }
     }
 
+    /**
+     * @Author xieya
+     * @Description  工种表导入工种信息
+     * @Date 2020/4/13 10:57
+     * @param info
+     * @return void
+     **/
     private void importProjectWorkerType(ArchivesInfo info) {
         try{
             //给所有人员表插入单位ID
@@ -253,15 +271,18 @@ public class SelectQuartzArvhivesInfo {
             if (jstype_id == null) {
                 workType.insert();
             }
-        }catch(Exception e3){
-            log.error("插入项目下的人员信息出错： =============================================================>",e3);
-            log.error(new Date());
-            log.error(e3);
-        }
-        finally {
+        }catch(Exception e){
+            log.error("工种表导入工种信息出错： =========>",e);
         }
     }
 
+    /**
+     * @Author xieya
+     * @Description  插入历史记录表信息
+     * @Date 2020/4/13 10:56
+     * @param info
+     * @return void
+     **/
     private void importProjectWorkerHistory(ArchivesInfo info) {
         try{
             //给历史记录表
@@ -283,11 +304,7 @@ public class SelectQuartzArvhivesInfo {
         }
 
         catch(Exception e) {
-            log.error("插入项目下的人员信息出错： =============================================================>",e);
-            log.error(new Date());
-            log.error(e);
-        }
-        finally {
+            log.error("历史记录表信息表出错： ======>",e);
         }
     }
 
@@ -303,7 +320,7 @@ public class SelectQuartzArvhivesInfo {
 
         AllUserInfo info = new AllUserInfo();
         try {
-            log.info("正在执行更新工人头像： =============================================================>");
+            log.info("正在执行更新工人头像： ==========>");
             List<AllUserInfo> infoList = info.select("cwrIdnum,cwrPhoto").query();
             for (AllUserInfo userInfo:infoList) {
                 ArchivesInfoUpdate archivesInfo = new ArchivesInfoUpdate();
@@ -313,7 +330,7 @@ public class SelectQuartzArvhivesInfo {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            log.error("更新工人头像出错： =============================================================>",e);
+            log.error("更新工人头像出错： ==========>",e);
         }
     }
 

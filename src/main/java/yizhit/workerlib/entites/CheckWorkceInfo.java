@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class CheckWorkceInfo extends Queryable<CheckWorkceInfo> implements Serializable {
 
     @Fieldname("checkworkce_id")
-    private String eafId;           //记录id
+    private String checkworkceId;           //记录id
     private String eafCreator;      //创建人
     private String eafModifytime;   //更新时间
     private String eafCreatetime;   //创建时间
@@ -38,12 +38,12 @@ public class CheckWorkceInfo extends Queryable<CheckWorkceInfo> implements Seria
 
     public CheckWorkceInfo(){}
 
-    public String getEafId() {
-        return eafId;
+    public String getCheckworkceId() {
+        return checkworkceId;
     }
 
-    public void setEafId(String eafId) {
-        this.eafId = eafId;
+    public void setCheckworkceId(String checkworkceId) {
+        this.checkworkceId = checkworkceId;
     }
 
     public String getEafCreator() {
