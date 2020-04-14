@@ -1,29 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package yizhit.workerlib;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +9,9 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
 import java.io.FileNotFoundException;
@@ -44,6 +21,7 @@ import java.net.MalformedURLException;
 @EnableEurekaClient
 @SpringBootApplication(scanBasePackages = {"ccait.ccweb", "yizhit.workerlib"},
         exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
+@EnableScheduling
 public class Application extends SpringBootServletInitializer {
 
     private static final Logger log = LogManager.getLogger( Application.class );
@@ -78,5 +56,13 @@ public class Application extends SpringBootServletInitializer {
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
         // 注意这里要指向原先用main方法执行的Application启动类
         return builder.sources(Application.class);
+    }
+
+    @Bean
+    public ThreadPoolTaskScheduler taskScheduler(){
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(10);
+        taskScheduler.initialize();
+        return taskScheduler;
     }
 }

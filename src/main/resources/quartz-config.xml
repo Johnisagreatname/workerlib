@@ -160,8 +160,8 @@
             <list>
                 <!--此处指的是上面定时的方法-->
                 <!--<ref bean="ProjectInfoTrigger1"></ref>-->
-                <ref bean="AllUserTrigger2"></ref>
-                <ref bean="ArvhivesTrigger3"></ref>
+<!--                <ref bean="AllUserTrigger2"></ref>-->
+<!--                <ref bean="ArvhivesTrigger3"></ref>-->
                 <!--<ref bean="ArvhivesPhotoTrigger4"></ref>-->
                 <!--<ref bean="CheckWorkceTrigger5"></ref>-->
             </list>
