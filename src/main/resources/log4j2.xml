@@ -38,22 +38,22 @@
             <appenderRef ref="RollingFile"/>
         </asyncRoot>
         <!--屏蔽掉spring和hibernate的一些无用的debug信息-->
-        <logger name="org.springframework" level="INFO" additivity="false"></logger>
-        <logger name="org.mybatis" level="INFO" additivity="false"></logger>
+<!--        <logger name="org.springframework" level="INFO" additivity="false"></logger>-->
+<!--        <logger name="org.mybatis" level="INFO" additivity="false"></logger>-->
         <!--屏蔽掉springcloud服务注册失败日志，如果有用到springcloud可以配上相应的appender-->
         <logger name="com.netflix.discovery" level="OFF"></logger>
         <!-- druid配置 -->
-        <logger name="druid.sql.Statement" level="warn" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="druid.sql.ResultSet" level="warn" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="druid.sql.Connection" level="warn" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
-        <logger name="druid.sql.DataSource" level="warn" additivity="false">
-            <appender-ref ref="Console"/>
-        </logger>
+<!--        <logger name="druid.sql.Statement" level="warn" additivity="false">-->
+<!--            <appender-ref ref="Console"/>-->
+<!--        </logger>-->
+<!--        <logger name="druid.sql.ResultSet" level="warn" additivity="false">-->
+<!--            <appender-ref ref="Console"/>-->
+<!--        </logger>-->
+<!--        <logger name="druid.sql.Connection" level="warn" additivity="false">-->
+<!--            <appender-ref ref="Console"/>-->
+<!--        </logger>-->
+<!--        <logger name="druid.sql.DataSource" level="warn" additivity="false">-->
+<!--            <appender-ref ref="Console"/>-->
+<!--        </logger>-->
     </loggers>
 </configuration>
