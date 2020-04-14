@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SelectQuartzUnitrInfo {
-    private static final Logger log = LogManager.getLogger(SelectQuartzAllUserInfo.class);
+    private static final Logger log = LogManager.getLogger(SelectQuartzUnitrInfo.class);
 
     @Value("${enableTasks:false}")
     private Boolean enableTasks;
@@ -32,7 +32,7 @@ public class SelectQuartzUnitrInfo {
         }
 
         // 数据库数据
-        System.out.println("查询公司表工作正在进入处理...");
+        log.info("查询公司表工作正在进入处理...");
         JSONObject params = new JSONObject();
         JSONArray array = null;
         int pageIndex = 0;
@@ -64,11 +64,10 @@ public class SelectQuartzUnitrInfo {
             String result = RequestUtils.post(FinalUtil.url, str, header );
             JSONObject json = JSONObject.parseObject(result);
 
-            List<UnitrInfo> allUnitrInfoList = new ArrayList<UnitrInfo>();
             // 数据获取正确
             if(json.containsKey("code") && json.get("code").equals("0")){
                 array = json.getJSONObject("data").getJSONArray("list");
-                allUnitrInfoList = (List<UnitrInfo>) FastJsonUtils.toList(array.toJSONString(), UnitrInfo.class);
+                List<UnitrInfo> allUnitrInfoList = FastJsonUtils.toList(array.toJSONString(), UnitrInfo.class);
                 if (allUnitrInfoList.size() == 500){
                     pageIndex++;
                 }

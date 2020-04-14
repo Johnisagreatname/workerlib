@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import entity.query.Datetime;
 import entity.tool.util.FastJsonUtils;
 import entity.tool.util.RequestUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Value;
 import yizhit.workerlib.entites.AllUserInfo;
@@ -21,6 +23,8 @@ import java.util.List;
 
 @DisallowConcurrentExecution
 public class SelectQuartzCheckWorkceInfo {
+
+    private static final Logger log = LogManager.getLogger(SelectQuartzCheckWorkceInfo.class);
 
     @Value("${enableTasks:false}")
     private Boolean enableTasks;
@@ -61,8 +65,8 @@ public class SelectQuartzCheckWorkceInfo {
                 String formatDate = Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss");
                 sb.append("appid=appid1").append("&data=" + jsonObject.toJSONString()).append("&format=json").append("&method=project.atte.list").append("&nonce=123456").append("&timestamp=" + formatDate).append("&version=1.0").append("&appsecret=123456");
                 String hex = sb.toString().toLowerCase();
-                System.out.println(hex);
-                String s = SHA256.getSHA256StrJava(hex);
+                log.info(hex);
+                String sign = SHA256.getSHA256StrJava(hex);
 
                 //发送请求
                 params.put("method", "project.atte.list");
@@ -71,32 +75,31 @@ public class SelectQuartzCheckWorkceInfo {
                 params.put("appid", "appid1");
                 params.put("timestamp", formatDate);
                 params.put("nonce", "123456");
-                params.put("sign", s);
+                params.put("sign", sign);
                 params.put("data", jsonObject.toJSONString());
                 String str = params.toJSONString();
-                System.out.println("params:  " + str);
+                log.info("params:  " + str);
                 HashMap<String, String> header = new HashMap<String, String>();
                 header.put("Content-Type", "application/json");
                 String result = RequestUtils.post(FinalUtil.url, str, header);
                 JSONObject json = JSONObject.parseObject(result);
 
-                List<CheckWorkceInfo> checkWorkceInfosList = new ArrayList<CheckWorkceInfo>();
                 // 数据获取正确
                 if (json.containsKey("code") && json.get("code").equals("0")) {
                     array = json.getJSONObject("data").getJSONArray("list");
                     String text = array.toJSONString();
-                    checkWorkceInfosList = FastJsonUtils.toList(text,   CheckWorkceInfo.class);
+                    List<CheckWorkceInfo> checkWorkceInfosList = FastJsonUtils.toList(text,   CheckWorkceInfo.class);
                     if (checkWorkceInfosList.size() == 500){
                         pageIndex++;
                     }
                     for (CheckWorkceInfo info : checkWorkceInfosList) {
                         try {
                             CheckWorkceInfo checkWorkceInfo = new CheckWorkceInfo();
-                            checkWorkceInfo.setEafId(info.getEafId());
+                            checkWorkceInfo.setCheckworkceId(info.getCheckworkceId());
                             checkWorkceInfo.setCwrPrjid(info.getCwrPrjid());
-                            CheckWorkceInfo js = checkWorkceInfo.where("[checkworkce_id]=#{eafId}").and("[cwrPrjid]=#{cwrPrjid}").first();
+                            CheckWorkceInfo js = checkWorkceInfo.where("[checkworkce_id]=#{checkworkceId}").and("[cwrPrjid]=#{cwrPrjid}").first();
                             if (js == null){
-                                Integer i = info.insert();
+                                info.insert();
                             }else {
                                 checkWorkceInfo.setEafCreator(info.getEafCreator());
                                 checkWorkceInfo.setEafModifytime(info.getEafModifytime());
@@ -120,7 +123,7 @@ public class SelectQuartzCheckWorkceInfo {
                                 checkWorkceInfo.setCwrIdnum(info.getCwrIdnum());
                                 checkWorkceInfo.setCwrProcessStatus(info.getCwrProcessStatus());
                                 checkWorkceInfo
-                                        .where("[eafId]=#{checkworkce_id}")
+                                        .where("[checkworkceId]=#{checkworkce_id}")
                                         .and("[cwrPrjid]=#{cwrPrjid}").update("[eafCreator]=#{eafCreator},[eafModifytime]=#{eafModifytime},[eafCreatetime]=#{eafCreatetime}," +
                                                                                                                              "[eafModifier]=#{eafModifier},[cwrPrjid]=#{cwrPrjid},[cwrComid]=#{cwrComid}," +
                                                                                                                              "[cwrGrpid]=#{cwrGrpid},[cwrUserid]=#{cwrUserid},[cwrEquid]=#{cwrEquid}," +
@@ -134,13 +137,12 @@ public class SelectQuartzCheckWorkceInfo {
                             e.printStackTrace();
                         }
                     }
-                    System.out.println("数据插入完成!");
+                    log.info("数据插入完成!");
                     timerProfile.setValue(pageIndex);
                     timerProfile.where("[key]=#{key}").and("[pid]=#{pid}").update("[value]=#{value}");
                 } else {
-                    System.out.println("error:  " + result);
+                    log.error("error:  " + result);
                 }
-                Thread.sleep(1000);
                 Runtime.getRuntime().gc();
             }
         } catch (Exception e) {

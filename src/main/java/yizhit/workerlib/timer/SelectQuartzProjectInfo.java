@@ -3,6 +3,7 @@ package yizhit.workerlib.timer;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import entity.query.Datetime;
+import entity.query.core.DBTransaction;
 import entity.tool.util.FastJsonUtils;
 import entity.tool.util.RequestUtils;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +47,7 @@ public class SelectQuartzProjectInfo {
                 pageIndex = currentTimerProfile.getValue();
             }else{
                 timerProfile.setValue(1);
-                Integer i = timerProfile.insert();
+                timerProfile.insert();
                 pageIndex = 1;
             }
             //拼接校验码
@@ -54,8 +55,8 @@ public class SelectQuartzProjectInfo {
             String formatDate = Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss");
             sb.append("appid=appid1").append("&data="+jsonObject.toJSONString()).append("&format=json").append("&method=project.info").append("&nonce=123456").append("&timestamp=").append(formatDate).append("&version=1.0").append("&appsecret=123456");
             String hex = sb.toString().toLowerCase();
-            String s = SHA256.getSHA256StrJava(hex);
-            System.out.println("cd:"+s);
+            String sha256 = SHA256.getSHA256StrJava(hex);
+            System.out.println("sha256:"+sha256);
 
             params.put("method","project.info");
             params.put("format","json");
@@ -63,31 +64,33 @@ public class SelectQuartzProjectInfo {
             params.put("appid","appid1");
             params.put("timestamp",formatDate);
             params.put("nonce","123456");
-            params.put("sign",s);
+            params.put("sign",sha256);
             params.put("data",jsonObject.toJSONString());
             String str = params.toJSONString();
             log.info("params:  " + str);
             log.info(formatDate);
-            HashMap<String, String> header = new HashMap<String, String>();
+            HashMap<String, String> header = new HashMap<>();
             header.put("Content-Type", "application/json");
             String result = RequestUtils.post(FinalUtil.url, str, header );
             JSONObject json = JSONObject.parseObject(result);
 
-            List<ProjectInfo> list = new ArrayList<ProjectInfo>();
             // 数据获取正确
             if(json.containsKey("code") && json.get("code").equals("0")){
                 array = json.getJSONObject("data").getJSONArray("list");
-                list = (List<ProjectInfo>) FastJsonUtils.toList(array.toJSONString(), ProjectInfo.class);
+                List<ProjectInfo> list = FastJsonUtils.toList(array.toJSONString(), ProjectInfo.class);
                 if (list.size() == 500){
                     pageIndex++;
                 }
+                int index = 1;
                 for(ProjectInfo item : list) {
                     ProjectInfo js = null;
                     ProjectInfo projectInfo = null;
                     try {
+//                        DBTransaction tran = item.dataSource().beginTransaction();
                         //获取Group表的id
                         String groupId = UUID.randomUUID().toString().replace("-", "");
                         Group group = new Group();
+//                        group.setTransaction(tran);
                         group.setGroupId(groupId);
                         group.setUserPath("0/1");
                         group.setCreateOn(Datetime.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -101,6 +104,7 @@ public class SelectQuartzProjectInfo {
                         //获取Privilege表的id
                         String privilegeId = UUID.randomUUID().toString().replace("-", "");
                         Privilege privilege = new Privilege();
+//                        privilege.setTransaction(tran);
                         privilege.setPrivilegeId(privilegeId);
                         privilege.setGroupId(groupId);
                         privilege.setRoleId(roleId.getRoleId());
@@ -124,10 +128,13 @@ public class SelectQuartzProjectInfo {
                         projectInfo.setEafId(item.getEafId());
                         //查找是否有相同的公司
                         js = projectInfo.where("[project_id]=#{eafId}").first();
+                        log.info("projectInfo="+JSONObject.toJSON(js));
                         if (js == null) {
                             Integer i = item.insert();
                             group.insert();
                             privilege.insert();
+                            item.dataSource().commit();
+                            log.info(index++ +"条插入数据成功");
                         } else {
                             projectInfo.setEafModifytime(item.getEafModifytime());
                             projectInfo.setEafCreatetime(item.getEafCreatetime());
@@ -157,29 +164,25 @@ public class SelectQuartzProjectInfo {
                                     "[organization]=#{cwrSgUnit}," +
                                     "[supervising]=#{cwrControlUnit}");
                             group.where("[groupName]=#{groupName}").update("[groupName]=#{groupName}");
+                            log.info(index++ + group.getGroupName()+"项目数据更新成功");
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
+//                        item.dataSource().rollback();
+                        log.error(e);
                         if (js == null) {
                             log.error("项目数据插入失败: =============================================================>");
                             log.error(FastJsonUtils.convertObjectToJSON(item));
-                        }
-                        else {
+                        } else {
                             log.error("项目数据更新失败: ------------------------------------------------------------>");
                             log.error(FastJsonUtils.convertObjectToJSON(projectInfo));
                         }
-
-                        log.error("--------------------------------------------------------------------------------");
-                        log.error(e);
                     }
-                    Thread.sleep(1000);
                 }
-                System.out.println("数据插入完成!");
+                log.info("项目数据操作完成!");
                 timerProfile.setValue(pageIndex);
                 timerProfile.where("[key]=#{key}").update("[value]=#{value}");
                 Runtime.getRuntime().gc();
-            }
-            else {
+            } else {
                 System.out.println("error:  " + result);
             }
         } catch (Exception e) {
