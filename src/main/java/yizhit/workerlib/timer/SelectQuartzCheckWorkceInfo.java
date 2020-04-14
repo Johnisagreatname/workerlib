@@ -119,7 +119,9 @@ public class SelectQuartzCheckWorkceInfo {
                                 checkWorkceInfo.setCwrUsertype(info.getCwrUsertype());
                                 checkWorkceInfo.setCwrIdnum(info.getCwrIdnum());
                                 checkWorkceInfo.setCwrProcessStatus(info.getCwrProcessStatus());
-                                checkWorkceInfo.where("[eafId]=#{checkworkce_id}").and("[cwrPrjid]=#{cwrPrjid}").update("[eafCreator]=#{eafCreator},[eafModifytime]=#{eafModifytime},[eafCreatetime]=#{eafCreatetime}," +
+                                checkWorkceInfo
+                                        .where("[eafId]=#{checkworkce_id}")
+                                        .and("[cwrPrjid]=#{cwrPrjid}").update("[eafCreator]=#{eafCreator},[eafModifytime]=#{eafModifytime},[eafCreatetime]=#{eafCreatetime}," +
                                                                                                                              "[eafModifier]=#{eafModifier},[cwrPrjid]=#{cwrPrjid},[cwrComid]=#{cwrComid}," +
                                                                                                                              "[cwrGrpid]=#{cwrGrpid},[cwrUserid]=#{cwrUserid},[cwrEquid]=#{cwrEquid}," +
                                                                                                                              "[cwrPasstime]=#{cwrPasstime},[cwrDirection]=#{cwrDirection},[cwrPassmode]=#{cwrPassmode}," +
