@@ -42,8 +42,7 @@
         <property name="jobDetail" ref="springQtzAllUserInfoMethod"></property>
 
         <!-- cron表达式，执行时间  每天凌晨2点执行 -->
-<!--        <property name="cronExpression" value="0 0 2 * * ?"></property>-->
-        <property name="cronExpression" value="*/5 * * * * ?"></property>
+        <property name="cronExpression" value="0 0 2 * * ?"></property>
     </bean>
 
 
@@ -106,8 +105,7 @@
         <property name="jobDetail" ref="springQtzmyArvhivesInfoMethod"></property>
 
         <!-- cron表达式，执行时间  每天凌晨3点执行一次 -->
-<!--        <property name="cronExpression" value="0 0 3 * * ?"></property>-->
-        <property name="cronExpression" value="*/5 * * * * ?"></property>
+        <property name="cronExpression" value="0 0 3 * * ?"></property>
     </bean>
 
     <!-- 配置myArvhivesInfoPhoto类 -->

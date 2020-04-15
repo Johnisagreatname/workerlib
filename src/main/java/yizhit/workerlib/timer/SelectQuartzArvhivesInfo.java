@@ -10,15 +10,25 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.springframework.beans.factory.annotation.Value;
-import yizhit.workerlib.entites.*;
+import yizhit.workerlib.entites.AllUserInfo;
+import yizhit.workerlib.entites.AllUserInfoUpdate;
+import yizhit.workerlib.entites.ArchivesInfo;
+import yizhit.workerlib.entites.ArchivesInfoUpdate;
+import yizhit.workerlib.entites.InvoLvedproject;
+import yizhit.workerlib.entites.ProjectInfo;
+import yizhit.workerlib.entites.ProjectWorkType;
+import yizhit.workerlib.entites.TimerProfile;
+import yizhit.workerlib.entites.UserModel;
+import yizhit.workerlib.entites.WorkType;
 import yizhit.workerlib.interfaceuilt.FinalUtil;
 import yizhit.workerlib.interfaceuilt.SHA256;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.regex.Pattern;
 
-import static java.lang.Thread.sleep;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 
 @DisallowConcurrentExecution
@@ -54,18 +64,11 @@ public class SelectQuartzArvhivesInfo {
             timerProfile.setKey("archives");
             List<TimerProfile> profiles = timerProfile.where("[key]=#{key}").query();
 
-            List<ArchivesInfo> arvhivesInfoListByInsert = new ArrayList<>();
-
+            List<ArchivesInfo> archivesInfoList = null;
             for (ProjectInfo projectInfoitem:projectInfoList) {
                 try{
                     timerProfile.setPid(projectInfoitem.getEafId());
-//                    int j = 0;
-//                    for(TimerProfile ti : profiles){
-//                        if(ti.getPid().equals(projectInfoitem.getEafId())){
-//                            j++;
-//                            System.out.println("第"+j+"个对象");
-//                        }
-//                    }
+
                     //可能会有2个对象
                     Optional<TimerProfile> optionals = profiles.stream().filter(a -> a.getPid().equals(projectInfoitem.getEafId())).findFirst();
                     TimerProfile currentTimerProfile = null;
@@ -113,13 +116,11 @@ public class SelectQuartzArvhivesInfo {
                     if (json.containsKey("code") && json.get("code").equals("0")) {
                         array = json.getJSONObject("data").getJSONArray("list");
                         String text = array.toJSONString();
-                        List<ArchivesInfo> archivesInfoList = FastJsonUtils.toList(text, ArchivesInfo.class);
+                        archivesInfoList = FastJsonUtils.toList(text, ArchivesInfo.class);
                         if (archivesInfoList.size() == 500) {
                             pageIndex++;
                         }
-                        for (ArchivesInfo info : archivesInfoList) {
-                            arvhivesInfoListByInsert.add(info);
-                        }
+
                     }else {
                         log.info("result=" + result);
                     }
@@ -128,7 +129,7 @@ public class SelectQuartzArvhivesInfo {
                 }
             }
 
-            for(ArchivesInfo info:arvhivesInfoListByInsert){
+            for(ArchivesInfo info: archivesInfoList){
                 //插入历史记录表信息
                 importProjectWorkerHistory(info);
                 //工种表导入工种信息

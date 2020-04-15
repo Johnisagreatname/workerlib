@@ -6,4 +6,5 @@ package yizhit.workerlib.interfaceuilt;
 public class FinalUtil {
 
     public static final String url = "http://113.105.121.93:9090/openapi?";
+
 }
