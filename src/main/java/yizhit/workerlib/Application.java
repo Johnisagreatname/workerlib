@@ -31,9 +31,7 @@ public class Application extends SpringBootServletInitializer {
         String flag = System.getProperty("isuat");
         if("true".equals( flag )) {
             setUat( true );
-        }
-
-        else {
+        } else {
             setUat( false );
         }
 

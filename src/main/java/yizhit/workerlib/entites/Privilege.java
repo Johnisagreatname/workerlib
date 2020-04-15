@@ -8,9 +8,12 @@ import java.util.UUID;
 
 @DataSource(value = "workerlib2", rxjava2 = false)
 public class Privilege extends Queryable<Privilege> implements Serializable {
-    private String privilegeId;     //权限表ID
-    private String groupId;         //分组表id
-    private UUID roleId;          //角色id
+    //权限表ID
+    private String privilegeId;
+    //分组表id
+    private String groupId;
+    //角色id
+    private UUID roleId;
     private int canAdd;
     private int canDelete;
     private int canUpdate;
