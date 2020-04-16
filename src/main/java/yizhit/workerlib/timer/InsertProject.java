@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import entity.tool.util.RequestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import yizhit.workerlib.entites.Group;
 import yizhit.workerlib.entites.PageNum;
 import yizhit.workerlib.entites.Privilege;
@@ -27,39 +29,46 @@ import java.util.UUID;
 public class InsertProject {
 
     private static final Logger logger = LogManager.getLogger(InsertProject.class);
-    
-    public void project(int pageIndex){
+
+    public void project(int pageIndex, int projectIndex, Boolean enableTasks) {
+        if (enableTasks != null && !enableTasks) {
+            return;
+        }
 
         logger.info("页码pageIndex=" + pageIndex);
-        
+
         try {
             //查询数据库页码
             PageNum pageNum = new PageNum();
+            pageNum.setPageName("project");
             if (pageIndex == 1) {
-                List<PageNum> pageNumList = pageNum.where("[id]=2").select("page_index").query();
+                List<PageNum> pageNumList = pageNum.where("[page_name]=#{pageName}").select("page_index").query(PageNum.class);
                 Integer dbNum = pageNumList.get(0).getPageIndex();
                 if (dbNum > 1) {
                     pageIndex = dbNum;
                 }
             }
-            
+
             //组装项目接口入参
             logger.info("组装项目接口入参开始");
-            String project = ParamUitls.setParam(pageIndex, ParamUitls.project);
-            
+            String project = ParamUitls.setParam(pageIndex, ParamUitls.project, null, null);
+
             logger.info("入参project=" + project);
-            HashMap<String, String> header = new HashMap<>();
-            header.put("Content-Type", "application/json");
+            HashMap<String, String> header = ParamUitls.setHeader();
             String projectResult = RequestUtils.post(FinalUtil.url, project, header);
             logger.info("返回参数projectResult=" + projectResult);
-            
+
             JSONObject projectJson = JSONObject.parseObject(projectResult);
             if (projectJson.containsKey("code") && projectJson.get("code").equals("0")) {
                 JSONArray array = projectJson.getJSONObject("data").getJSONArray("list");
+                int total = Integer.parseInt(String.valueOf(projectJson.getJSONObject("data").get("total")));
+                int pageSize = Integer.parseInt(String.valueOf(projectJson.getJSONObject("data").get("pageSize")));
+                int intTotal = total / pageSize;
                 //项目
                 List<ProjectInfo> projectInfoList = JSONArray.parseArray(array.toJSONString(), ProjectInfo.class);
 
-                int projectIndex = 0;
+                pageIndex++;
+
                 for (ProjectInfo projectInfo : projectInfoList) {
 
                     //获取Group表的id
@@ -110,14 +119,25 @@ public class InsertProject {
                         logger.info(projectIndex++);
                     }
                 }
-                logger.info("项目总数量="+projectIndex);
+                logger.info("项目总数量=" + projectIndex);
+                //递归
+                if (pageIndex <= intTotal + 1) {
+                    pageNum.setPageIndex(pageIndex);
+                    pageNum.where("[page_name]=#{pageName}").update("[page_index]=#{pageIndex}");
+                    project(pageIndex, projectIndex, enableTasks);
+                }
+
+                //清空页码数据
+                pageNum.setPageIndex(1);
+                pageNum.where("[page_name]=#{pageName}").update("[page_index]=#{pageIndex}");
+                logger.info("项目执行完成");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
+
     /**
      * @Author xieya
      * @Description 设置实体

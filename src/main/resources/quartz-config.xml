@@ -42,7 +42,8 @@
         <property name="jobDetail" ref="springQtzAllUserInfoMethod"></property>
 
         <!-- cron表达式，执行时间  每天凌晨2点执行 -->
-        <property name="cronExpression" value="0 0 2 * * ?"></property>
+<!--        <property name="cronExpression" value="0 0 2 * * ?"></property>-->
+        <property name="cronExpression" value="0/5 * * * * ?"></property>
     </bean>
 
 

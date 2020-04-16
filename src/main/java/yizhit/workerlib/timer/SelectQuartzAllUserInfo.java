@@ -51,9 +51,9 @@ public class SelectQuartzAllUserInfo {
 
     public void batchInsertArchivesInfo(){
 
-        if(enableTasks!=null && !enableTasks) {
-            return;
-        }
+//        if(enableTasks!=null && !enableTasks) {
+//            return;
+//        }
 
         // 数据库数据
         System.out.println("查询项目下人员工作正在进入处理...");

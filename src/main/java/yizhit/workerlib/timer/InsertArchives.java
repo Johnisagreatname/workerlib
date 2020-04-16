@@ -1,19 +1,19 @@
 package yizhit.workerlib.timer;
 
-import ccait.ccweb.utils.EncryptionUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import entity.query.Datetime;
+import entity.tool.util.FastJsonUtils;
 import entity.tool.util.RequestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import yizhit.workerlib.entites.AllUserInfoUpdate;
 import yizhit.workerlib.entites.ArchivesInfo;
 import yizhit.workerlib.entites.InvoLvedproject;
 import yizhit.workerlib.entites.PageNum;
 import yizhit.workerlib.entites.ProjectWorkType;
+import yizhit.workerlib.entites.UnitrInfo;
 import yizhit.workerlib.entites.UserModel;
 import yizhit.workerlib.entites.WorkType;
 import yizhit.workerlib.interfaceuilt.FinalUtil;
@@ -21,47 +21,17 @@ import yizhit.workerlib.uitls.DateUtils;
 import yizhit.workerlib.uitls.ParamUitls;
 import yizhit.workerlib.uitls.StringUitls;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  *@ClassName InsertArchives
- *@Description 
+ *@Description
  *@Author xieya
  *@Date 2020/4/14  18:10
  */
 public class InsertArchives {
-
-    public static boolean isActived = false;
-
-    @Value("${entity.security.encrypt.MD5.publicKey:ccait}")
-    private String md5PublicKey;
-
-    @Value("${entity.encoding:UTF-8}")
-    private String encoding;
-
-    @Value("${entity.upload.workerlib.people.code.path}")
-    private String qrCodePath;     //图片地址
-
-    @Value("${qrcode.width}")
-    private int width;
-
-    @Value("${qrcode.height}")
-    private int height;
-
-    @Value("${entity.security.encrypt.AES.publicKey:ccait}")
-    private String aesPublicKey;
-
-    @Value("${qrcode.server}")      //IP
-    private String server;
-
-    @Value("${enableTasks:false}")
-    private Boolean enableTasks;
 
     private static final Logger logger = LogManager.getLogger(InsertArchives.class);
 
@@ -73,15 +43,20 @@ public class InsertArchives {
      * @param sum       在线人员总数
      * @return void
      **/
-    public void archives(int pageIndex, int sum) throws IOException, SQLException {
+    public void archives(int pageIndex, int sum, Boolean enableTasks) {
+
+        if (enableTasks != null && !enableTasks) {
+            return;
+        }
 
         logger.info("页码pageIndex=" + pageIndex);
 
         try {
             //查询数据库页码
             PageNum pageNum = new PageNum();
+            pageNum.setPageName("archives");
             if (pageIndex == 1) {
-                List<PageNum> pageNumList = pageNum.where("[id]=1").select("page_index").query();
+                List<PageNum> pageNumList = pageNum.where("[page_name]=#{pageName}").select("page_index").query();
                 Integer dbNum = pageNumList.get(0).getPageIndex();
                 if (dbNum > 1) {
                     pageIndex = dbNum;
@@ -89,10 +64,9 @@ public class InsertArchives {
             }
 
             //组装入参
-            String com2user = ParamUitls.setParam(pageIndex, ParamUitls.com2user);
+            String com2user = ParamUitls.setParam(pageIndex, ParamUitls.com2user, null, null);
             logger.info("入参params=" + com2user);
-            HashMap<String, String> header = new HashMap<>();
-            header.put("Content-Type", "application/json");
+            HashMap<String, String> header = ParamUitls.setHeader();
             String com2userResult = RequestUtils.post(FinalUtil.url, com2user, header);
             logger.info("返回参数com2userResult=" + com2userResult);
             JSONObject com2userJson = JSONObject.parseObject(com2userResult);
@@ -106,9 +80,7 @@ public class InsertArchives {
 
                 //工程下的用户信息
                 List<ArchivesInfo> archivesInfoList = JSONArray.parseArray(array.toJSONString(), ArchivesInfo.class);
-                if (archivesInfoList.size() == 500) {
-                    pageIndex++;
-                }
+                pageIndex++;
                 for (ArchivesInfo archivesInfo : archivesInfoList) {
 
                     if ("进行中".equals(archivesInfo.getCwrUserStatus())) {
@@ -124,18 +96,18 @@ public class InsertArchives {
                 logger.info("在线人数sum=" + sum);
 
                 //递归
-                if (pageIndex <= intTotal) {
+                if (pageIndex <= intTotal + 1) {
                     pageNum.setPageIndex(pageIndex);
-                    pageNum.where("[id]=1").update("[page_index]=#{pageIndex}");
-                    archives(pageIndex, sum);
+                    pageNum.where("[page_name]=#{pageName}").update("[page_index]=#{pageIndex}");
+                    archives(pageIndex, sum, enableTasks);
                 }
 
                 logger.info("操作完成");
                 //清空页码数据
                 pageNum.setPageIndex(1);
-                pageNum.where("[id]=1").update("[page_index]=#{pageIndex}");
+                pageNum.where("[page_name]=#{pageName}").update("[page_index]=#{pageIndex}");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -168,18 +140,12 @@ public class InsertArchives {
 
                 if (StringUitls.isEmpty(archives)) {
 
-                    if (account == null) {
-                        //为空的时候  新建一条user数据
-                        addUser(archives);
-                    } else {
+                    if (account != null) {
                         archivesInfo.setCreateBy(account.getId());
                     }
 
                     logger.info("archivesInfo=" + archivesInfo.toString());
                     archivesInfo.insert();
-                    //跟新createBy和id一样
-//                    archivesInfo.where("[createBy]=0").update("[createBy]=#{id}");
-//                    archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}").update("[createBy]=#{id}");
                 } else {
                     archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}")
                             .update("[cwrUserStatus]=#{cwrUserStatus}," +
@@ -203,31 +169,71 @@ public class InsertArchives {
                                     "[leave]=#{leave}");
                 }
             }
+
+
+            String cwrComId = archivesInfo.getCwrComid();
+
+            unitrInfo(cwrComId);
+
         } catch (Exception e) {
             logger.error("插入工程下的用户信息出错： ======>", e);
         }
     }
 
-    private void addUser(ArchivesInfo archives) throws UnsupportedEncodingException, NoSuchAlgorithmException, SQLException {
+    /**
+     * @Author xieya
+     * @Description  关联公司
+     * @Date 2020/4/16 16:03
+     * @param cwrComId
+     * @return void
+     **/
+    private void unitrInfo(String cwrComId) {
 
-        UserModel userModel = new UserModel();
-        userModel.setUsername(archives.getCwrIdnum());
-        String passWord = "";
-        if (entity.tool.util.StringUtils.isEmpty(archives.getCwrIdnum()) || archives.getCwrIdnum().length() < 6) {
-            passWord = "123456";
-        } else {
-            passWord = archives.getCwrIdnum().substring(archives.getCwrIdnum().length() - 6);
+        try {
+            //组装入参
+            String company = ParamUitls.setParam(0, ParamUitls.company, null, cwrComId);
+            logger.info("入参params=" + company);
+            HashMap<String, String> header = ParamUitls.setHeader();
+            String companyResult = RequestUtils.post(FinalUtil.url, company, header);
+            logger.info("返回参数comidResult=" + companyResult);
+            JSONObject companyJson = JSONObject.parseObject(companyResult);
+
+            if (companyJson.containsKey("code") && companyJson.get("code").equals("0")) {
+                JSONArray array = companyJson.getJSONObject("data").getJSONArray("list");
+                List<UnitrInfo> allUnitrInfoList = FastJsonUtils.toList(array.toJSONString(), UnitrInfo.class);
+                logger.info("==============" + allUnitrInfoList.size());
+
+                for (UnitrInfo item : allUnitrInfoList) {
+                    UnitrInfo unitrInfo = new UnitrInfo();
+                    unitrInfo.setEafId(item.getEafId());
+                    UnitrInfo js = unitrInfo.where("unit_id=#{eafId}").first();
+                    if (js == null) {
+                        item.insert();
+                    } else {
+                        unitrInfo.setCwrComName(item.getCwrComName());
+                        unitrInfo.setCwrCode(item.getCwrCode());
+                        unitrInfo.setCwrComCode(item.getCwrComCode());
+                        unitrInfo.setCwrComFaren(item.getCwrComFaren());
+                        unitrInfo.setCwrComAddr(item.getCwrComAddr());
+                        unitrInfo.setCwrComStatus(item.getCwrComStatus());
+                        unitrInfo.setEafCreator(item.getEafCreator());
+                        unitrInfo.setEafCreatetime(item.getEafCreatetime());
+                        unitrInfo.setModifyBy(item.getModifyBy());
+                        unitrInfo.setCwrComType(item.getCwrComType());
+                        unitrInfo.where("unit_id=#{eafId}").update("[unit_name]=#{cwrComName},[unit_number]=#{cwrCode},[project_license]=#{cwrComCode}," +
+                                "[principal]=#{cwrComFaren},[userPath]=#{cwrComAddr},[status]=#{cwrComStatus}," +
+                                "[createBy]=#{eafCreator},[createOn]=#{eafCreatetime},[modifyBy]=#{modifyBy}," +
+                                "[modifyOn]=#{eafModifytime},[cwrComType]=#{cwrComType}");
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        userModel.setPassword(EncryptionUtil.md5(passWord, md5PublicKey, encoding));
-        userModel.setPath("0/1");
-        userModel.setCreateBy(Integer.valueOf(1));
-        userModel.setCreateOn(DateUtils.getCurrentDateTime());
-        userModel.insert();
 
-        //CreateBy和id一样
-        userModel.where("[createBy]=0").update("[createBy]=#{id}");
+
     }
-
 
     /**
      * @Author xieya
