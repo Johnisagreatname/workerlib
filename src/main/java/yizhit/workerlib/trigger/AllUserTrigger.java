@@ -114,7 +114,12 @@ public class AllUserTrigger {
 
             if(userid < 1) {
                 userid = userModel.insert();
+                UserModel userModel1 = new UserModel();
+                userModel1.setUsername(Idnum);
+                UserModel userModel2 = userModel1.where("[username]=#{username}").first();
+                userModel2.where("[id]=#{id}").update("[createBy]=#{id}");
             }
+
             UserGroupRoleModel userGroupRoleModel = new UserGroupRoleModel();
             String userGroupRoleId = UUID.randomUUID().toString().replace("-", "");
             userGroupRoleModel.setUserGroupRoleId(userGroupRoleId);
@@ -140,6 +145,8 @@ public class AllUserTrigger {
                 //把账号和密码拼接起来
                 String vaildCode = EncryptionUtil.md5(EncryptionUtil.encryptByAES(js.getId().toString(), js.getUsername() + aesPublicKey), "UTF-8");
                 String IdumPass = js.getUsername() + vaildCode;
+                log.info("IdumPass="+IdumPass);
+                log.info("aesPublicKey="+aesPublicKey);
                 String token = EncryptionUtil.encryptByAES(IdumPass, aesPublicKey);
                 String url = server + "/mobile/details?token=" + token + "&eafid=" + item.get("eafId");
                 String filename = js.getUsername() + ".png";
