@@ -146,7 +146,8 @@ public class InsertArchives {
 
                     logger.info("archivesInfo=" + archivesInfo.toString());
                     archivesInfo.insert();
-                } else {
+                    //archives.getEafUserStatus() == 0 代表是手动导入的数据 不跟新
+                } else if(archives.getEafUserStatus() != 0){
                     archivesInfo.where("[archives_id]=#{userid}").and("[project_id]=#{cwrPrjid}")
                             .update("[cwrUserStatus]=#{cwrUserStatus}," +
                                     "[eafId]=#{eafId}," +

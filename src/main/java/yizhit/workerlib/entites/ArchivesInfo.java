@@ -68,6 +68,9 @@ public class ArchivesInfo extends Queryable<ArchivesInfo> {
 
     private String cwrUserOut;
 
+    //状态
+    private int eafUserStatus;
+
 
     public int getId() {
         return id;
@@ -252,4 +255,11 @@ public class ArchivesInfo extends Queryable<ArchivesInfo> {
 //    private String cwrIsLeader;
 
 
+    public int getEafUserStatus() {
+        return eafUserStatus;
+    }
+
+    public void setEafUserStatus(int eafUserStatus) {
+        this.eafUserStatus = eafUserStatus;
+    }
 }
