@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import yizhit.workerlib.timer.InsertArchives;
+import yizhit.workerlib.timer.InsertCompanyHierarchy;
 import yizhit.workerlib.timer.InsertProject;
 import yizhit.workerlib.timer.InsertUser;
 
@@ -81,6 +82,18 @@ public class ScheduledTask {
         try {
             InsertUser insertUser = new InsertUser();
             insertUser.user(md5PublicKey, aesPublicKey, qrCodePath, width, height, server);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void InsertCompanyHierarchy() {
+        logger.info("请求市政公司层级关系数据接口");
+        try {
+            InsertCompanyHierarchy insertCompanyHierarchy = new InsertCompanyHierarchy();
+            insertCompanyHierarchy.companyHierarchy();
         } catch (Exception e) {
             e.printStackTrace();
         }
