@@ -138,6 +138,8 @@ public class InsertArchives {
                 account.setUsername(archivesInfo.getCwrIdnum());
                 account = account.where("username=#{username}").first();
 
+                //写死
+                archivesInfo.setEafUserStatus(1);
                 if (StringUitls.isEmpty(archives)) {
 
                     if (account != null) {
@@ -145,6 +147,12 @@ public class InsertArchives {
                     }
 
                     logger.info("archivesInfo=" + archivesInfo.toString());
+                    int i = 0;
+                    if("1".equals(archivesInfo.getEafName()) || "2".equals(archivesInfo.getEafName()) || "3".equals(archivesInfo.getEafName())){
+                        System.out.println(archivesInfo.toString());
+                        System.out.println("============================================"+i++);
+                    }
+
                     archivesInfo.insert();
                     //archives.getEafUserStatus() == 0 代表是手动导入的数据 不跟新
                 } else if(archives.getEafUserStatus() != 0){
@@ -222,7 +230,7 @@ public class InsertArchives {
                         unitrInfo.setModifyBy(item.getModifyBy());
                         unitrInfo.setCwrComType(item.getCwrComType());
                         unitrInfo.where("unit_id=#{eafId}").update("[unit_name]=#{cwrComName},[unit_number]=#{cwrCode},[project_license]=#{cwrComCode}," +
-                                "[principal]=#{cwrComFaren},[userPath]=#{cwrComAddr},[status]=#{cwrComStatus}," +
+                                "[principal]=#{cwrComFaren},[address]=#{cwrComAddr},[status]=#{cwrComStatus}," +
                                 "[createBy]=#{eafCreator},[createOn]=#{eafCreatetime},[modifyBy]=#{modifyBy}," +
                                 "[modifyOn]=#{eafModifytime},[cwrComType]=#{cwrComType}");
                     }

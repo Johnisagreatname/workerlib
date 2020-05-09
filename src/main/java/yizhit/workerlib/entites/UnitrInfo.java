@@ -24,7 +24,7 @@ public class UnitrInfo extends Queryable<UnitrInfo> {
     @Fieldname("principal")
     private String  cwrComFaren;        //负责人
 
-    @Fieldname("userPath")
+    @Fieldname("address")
     private String  cwrComAddr;         //地址
 
     @Fieldname("status")

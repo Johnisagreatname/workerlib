@@ -53,7 +53,6 @@ public class ArchivesInfo extends Queryable<ArchivesInfo> {
     @Fieldname("modifyOn")
     private String eafModifytime;   //更新时间
 
-
     private String eafRLeftid;
 
     private int leave;              //数字状态
@@ -61,16 +60,47 @@ public class ArchivesInfo extends Queryable<ArchivesInfo> {
     private String cwrUserStatus;   //文字状态
 
     private String cwrWorkclassId;
-
+//
     private String cwrWorktype;
-
+//
     private String cwrUserIn;
-
+//
     private String cwrUserOut;
+
+    public String getCwrWorkclassId() {
+        return cwrWorkclassId;
+    }
+
+    public void setCwrWorkclassId(String cwrWorkclassId) {
+        this.cwrWorkclassId = cwrWorkclassId;
+    }
+
+    public String getCwrWorktype() {
+        return cwrWorktype;
+    }
+
+    public void setCwrWorktype(String cwrWorktype) {
+        this.cwrWorktype = cwrWorktype;
+    }
 
     //状态
     private int eafUserStatus;
 
+    public String getCwrUserIn() {
+        return cwrUserIn;
+    }
+
+    public void setCwrUserIn(String cwrUserIn) {
+        this.cwrUserIn = cwrUserIn;
+    }
+
+    public int getEafUserStatus() {
+        return eafUserStatus;
+    }
+
+    public void setEafUserStatus(int eafUserStatus) {
+        this.eafUserStatus = eafUserStatus;
+    }
 
     public int getId() {
         return id;
@@ -210,37 +240,7 @@ public class ArchivesInfo extends Queryable<ArchivesInfo> {
         this.cwrUserStatus = cwrUserStatus;
     }
 
-    public String getCwrWorkclassId() {
-        return cwrWorkclassId;
-    }
 
-    public void setCwrWorkclassId(String cwrWorkclassId) {
-        this.cwrWorkclassId = cwrWorkclassId;
-    }
-
-    public String getCwrWorktype() {
-        return cwrWorktype;
-    }
-
-    public void setCwrWorktype(String cwrWorktype) {
-        this.cwrWorktype = cwrWorktype;
-    }
-
-    public String getCwrUserIn() {
-        return cwrUserIn;
-    }
-
-    public void setCwrUserIn(String cwrUserIn) {
-        this.cwrUserIn = cwrUserIn;
-    }
-
-    public String getCwrUserOut() {
-        return cwrUserOut;
-    }
-
-    public void setCwrUserOut(String cwrUserOut) {
-        this.cwrUserOut = cwrUserOut;
-    }
 
     public Integer getCreateBy() {
         return createBy;
@@ -255,11 +255,11 @@ public class ArchivesInfo extends Queryable<ArchivesInfo> {
 //    private String cwrIsLeader;
 
 
-    public int getEafUserStatus() {
-        return eafUserStatus;
+    public String getCwrUserOut() {
+        return cwrUserOut;
     }
 
-    public void setEafUserStatus(int eafUserStatus) {
-        this.eafUserStatus = eafUserStatus;
+    public void setCwrUserOut(String cwrUserOut) {
+        this.cwrUserOut = cwrUserOut;
     }
 }
