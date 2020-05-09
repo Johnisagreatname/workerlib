@@ -19,14 +19,17 @@ public class ParamUitls {
 
     private static final Logger logger = LogManager.getLogger(InsertArchives.class);
 
-    /**查询所有数据*/
+    /**查询所有数据（中车接口）*/
     public static final String com2user = "com2user.info";
-    /**查询项目数据*/
+    /**查询项目数据（中车接口）*/
     public static final String project = "project.info";
-    /**查询用户数据*/
+    /**查询用户数据（中车接口）*/
     public static final String user = "user.info";
-    /**查询公司数据*/
+    /**查询公司数据（中车接口）*/
     public static final String company = "company.info";
+
+    /**市政公司层级关系数据接口*/
+    public static final String companyHierarchyUrl = "http://iepm.tagen.cn/webapi/smartsite_interface_szsz/QueryOrgDepartmentInfo";
 
 
     /**
