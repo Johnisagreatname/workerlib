@@ -69,7 +69,7 @@ entity:
       aclId: roleId #访问控制ID
       privilegeId: privilegeId #权限ID
       userGroupRoleId: userGroupRoleId #用户组角色关联ID
-      userId: id #用户ID(整型，会被计算到userPath中)
+      userId: userId #用户ID(整型，会被计算到userPath中)
       id: id #系统默认id字段名
 
     #系统保留表(必填)
