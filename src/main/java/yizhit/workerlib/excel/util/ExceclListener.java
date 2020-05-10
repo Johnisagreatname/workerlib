@@ -72,7 +72,7 @@ public class ExceclListener extends AnalysisEventListener<coursewareData> {
                 cour.setWhether("是");
                 cour.setTypeWork("普工");
                 cour.setStatus(2);
-                cour.setCreateBy(user.getId());
+                cour.setCreateBy(user.getUserId());
                 cour.insert();
             }
             courId =  cour.where("[title]=#{title}").select("id").first(Integer.class);
@@ -90,7 +90,7 @@ public class ExceclListener extends AnalysisEventListener<coursewareData> {
                 cul.setTrainingAddress(datas.get(i).getTrainingInstitution());
                 cul.setCreateOn(datas.get(i).getCoursewareDate().replace("/","-"));
                 cul.setCourseName(datas.get(i).getTitle());
-                cul.setCreateBy(user.getId());
+                cul.setCreateBy(user.getUserId());
                 cul.insert();
             }else {
                 upCul.setPeoples(cultivate.getPeoples()+1);

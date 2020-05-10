@@ -82,8 +82,8 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
                     }
                     allusers.setCwrIdnumType("1");      //身份证类型
                     allusers.setEafUserStatus(0);       //状态：0属于自有工人
-                    allusers.setCreateBy(user.getId());     //创建人
-                    allusers.setUserPath(user.getPath() + "/" + user.getId());      //创建人
+                    allusers.setCreateBy(user.getUserId());     //创建人
+                    //allusers.setUserPath(user.getUserPath() + "/" + user.getUserId());      //创建人
                     allusers.insert();
                     System.out.println(i+"null>>>>>>>>>>>>>>alluser--insert");
                     if (datas.get(i).getVocational() != null) {
@@ -93,8 +93,8 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
                     }
                     workTypes.setEafId(eafId);
                     workTypes.setWorkType(datas.get(i).getWorkType());
-                    workTypes.setUserPath(user.getPath() + "/" + user.getId());
-                    workTypes.setCreateBy(user.getId());
+                    //workTypes.setUserPath(user.getUserPath() + "/" + user.getUserId());
+                    workTypes.setCreateBy(user.getUserId());
                     workTypes.setCreateOn(new Date());
                     workTypes.insert();
                     System.out.println(i+"null>>>>>>>>>>>>>>workType--insert");
@@ -103,7 +103,7 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
 //                allusers.setCwrIdnum(datas.get(i).getCwrIdnum());
 //                alluser alluser = allusers.where("[cwrIdnum]=#{cwrIdnum}").first();
 //                if(alluser != null){
-//                    allusers.setId(alluser.getId());
+//                    allusers.setId(alluser.getUserId());
 //                    allusers.setEafUserStatus(0);
 //                    alluser.where("[id]=#{id}").update("[eafUserStatus]=#{eafUserStatus}");
 //                    System.out.println(i+"已存在>>>>>>>>>>>>>>alluser--update-----"+datas.get(i).getCwrIdnum());
@@ -118,7 +118,7 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
                         passWord = datas.get(i).getCwrIdnum().substring(datas.get(i).getCwrIdnum().length() - 6);
                     }
                     users.setPassword(EncryptionUtil.md5(passWord, md5PublicKey, encoding));
-                    users.setUserPath(user.getPath() + "/" + user.getId());
+                    //users.setUserPath(user.getUserPath() + "/" + user.getUserId());
                     users.setCreateOn(new Date());
                     Integer userId = users.insert();
                     System.out.println(i+"新增>>>>>>>>>>>>>>users--insert");
@@ -133,7 +133,7 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
                     allusers.setCwrIdnumType("1");
                     allusers.setCwrIdnum(datas.get(i).getCwrIdnum());
                     allusers.setEafUserStatus(0);
-                    allusers.setCreateBy(user.getId());
+                    allusers.setCreateBy(user.getUserId());
 
                     String vaildCode = EncryptionUtil.md5(EncryptionUtil.encryptByAES(userId.toString(), users.getUsername() + aesPublicKey), "UTF-8");
                     String IdumPass = users.getUsername() + vaildCode;
@@ -165,8 +165,8 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
 
                     workTypes.setEafId(eafId);
                     workTypes.setWorkType(datas.get(i).getWorkType());
-                    workTypes.setUserPath(user.getPath() + "/" + user.getId());
-                    workTypes.setCreateBy(user.getId());
+                    //workTypes.setUserPath(user.getUserPath() + "/" + user.getUserId());
+                    workTypes.setCreateBy(user.getUserId());
                     workTypes.insert();
                     System.out.println(i+"新增>>>>>>>>>>>>>>workType--insert");
 
@@ -176,7 +176,7 @@ public class ExceclUserListener extends AnalysisEventListener<excelData> {
                     usergrouproles.setUserId(userId);
                     usergrouproles.setUserPath("");
                     usergrouproles.setCreateOn(new Date());
-                    usergrouproles.setCreateBy(user.getId());
+                    usergrouproles.setCreateBy(user.getUserId());
                     usergrouproles.insert();
                     System.out.println(i+"新增>>>>>>>>>>>>>>usergrouprole--insert");
                     System.out.println("\n");

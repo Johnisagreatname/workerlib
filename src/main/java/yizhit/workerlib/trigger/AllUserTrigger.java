@@ -77,6 +77,7 @@ public class AllUserTrigger {
     }
 
 
+
     public static AllUserInfo genQrCode(Map item, UserModel userModel, String md5PublicKey, String aesPublicKey, String qrCodePath, String encoding, int width, int height, String server, boolean formTrigger) throws NoSuchAlgorithmException, java.sql.SQLException, IOException {
 
         try {
